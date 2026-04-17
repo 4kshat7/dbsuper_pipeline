@@ -89,6 +89,20 @@ if $DOWNLOAD; then
   DOWNLOAD_FLAG="--download"
 fi
 
+echo "Running command:"
+echo "  encodefetch \\"
+echo "    --accessions \"${ACCESSIONS}\" \\"
+echo "    --assay-title \"Histone ChIP-seq\" \\"
+echo "    --target-label H3K27ac \\"
+echo "    --organism \"Homo sapiens\" \\"
+echo "    --file-type fastq \\"
+echo "    --status released \\"
+echo "    --threads 20 \\"
+echo "    --progress \\"
+echo "    --nfcore ${DOWNLOAD_FLAG}"
+echo ""
+echo "Please wait while it runs in the background..."
+
 encodefetch \
   --accessions "${ACCESSIONS}" \
   --assay-title "Histone ChIP-seq" \
