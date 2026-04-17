@@ -1,0 +1,344 @@
+#!/usr/bin/env python3
+import argparse
+import re
+import sys
+from pathlib import Path
+from typing import Optional
+
+import pandas as pd
+
+ENCFF_RE = re.compile(r"(ENCFF[0-9A-Z]+)")
+
+
+def is_gzip_file(path: Path) -> bool:
+    """Return True if file looks like gzip (by magic bytes)."""
+    try:
+        with path.open("rb") as f:
+            return f.read(2) == b"\x1f\x8b"
+    except Exception:
+        return False
+
+
+def rename_misnamed_fastqs(files_root: Path) -> None:
+    """
+    Rename *.fastq -> *.fastq.gz if it is actually gzip content.
+    Leaves non-gzip *.fastq unchanged (prints a warning).
+    """
+    fastq_files = list(files_root.rglob("*.fastq"))
+    if not fastq_files:
+        print("[INFO] No *.fastq files found to rename.")
+        return
+
+    renamed = 0
+    skipped = 0
+    for f in fastq_files:
+        if is_gzip_file(f):
+            gz = f.with_name(f.name + ".gz")  # ENCFF...fastq.gz
+            if gz.exists():
+                print(f"[WARN] Target exists, skipping rename: {gz}")
+                skipped += 1
+                continue
+            f.rename(gz)
+            renamed += 1
+        else:
+            print(f"[WARN] Not gzip (or corrupt), leaving as-is: {f}")
+            skipped += 1
+
+    print(f"[INFO] Renamed {renamed} file(s) from .fastq -> .fastq.gz; skipped {skipped}.")
+
+
+def url_to_encff(url: str) -> str:
+    m = ENCFF_RE.search(str(url))
+    if not m:
+        raise ValueError(f"Could not parse ENCFF accession from: {url}")
+    return m.group(1)
+
+
+def _pick_existing_path(p: Path, files_root: Path) -> Optional[Path]:
+    """
+    Resolve a path that may be absolute or relative to subset dir, and ensure it exists.
+    """
+    # Absolute path
+    if p.is_absolute() and p.exists():
+        return p.resolve()
+
+    # Relative path (common in manifests)
+    cand = (files_root.parent / p).resolve()
+    if cand.exists():
+        return cand
+
+    # Sometimes manifest stores path relative to files/
+    cand2 = (files_root / p).resolve()
+    if cand2.exists():
+        return cand2
+
+    return None
+
+
+def build_encff_index_from_manifest(manifest_tsv: Path, files_root: Path) -> dict:
+    """
+    Build ENCFF -> local path using manifest.tsv (preferred).
+    Works even if filenames don't match *.fastq.gz patterns.
+    """
+    df = pd.read_csv(manifest_tsv, sep="\t")
+
+    # Try to guess the accession column
+    acc_cols = [c for c in df.columns if c.lower() in ("file_accession", "accession", "encff", "file")]
+    if not acc_cols:
+        # fallback: any column that contains "encff" in its values
+        for c in df.columns:
+            if df[c].astype(str).str.contains("ENCFF", regex=False).any():
+                acc_cols = [c]
+                break
+    if not acc_cols:
+        raise RuntimeError(f"Could not find an accession column in {manifest_tsv}. Columns: {list(df.columns)}")
+    acc_col = acc_cols[0]
+
+    # Try to guess the local path column
+    path_cols = [c for c in df.columns if c.lower() in ("path", "local_path", "file_path", "filepath", "downloaded_path")]
+    if not path_cols:
+        # fallback: look for any column that looks like a path under files/
+        for c in df.columns:
+            s = df[c].astype(str)
+            if s.str.contains("/files/", regex=False).any() or s.str.contains("files/", regex=False).any():
+                path_cols = [c]
+                break
+
+    index = {}
+
+    if path_cols:
+        path_col = path_cols[0]
+        for _, row in df.iterrows():
+            acc = str(row[acc_col]).strip()
+            if not acc or acc == "nan":
+                continue
+            m = ENCFF_RE.search(acc)
+            if m:
+                acc = m.group(1)
+
+            raw_path = str(row[path_col]).strip()
+            if not raw_path or raw_path == "nan":
+                continue
+
+            p = _pick_existing_path(Path(raw_path), files_root)
+            if p is not None:
+                index.setdefault(acc, p)
+    else:
+        # If no path column exists, we can still use manifest to get accessions,
+        # but we must locate files on disk by searching.
+        accs = []
+        for v in df[acc_col].astype(str).tolist():
+            m = ENCFF_RE.search(v)
+            if m:
+                accs.append(m.group(1))
+        accs = sorted(set(accs))
+        for acc in accs:
+            hits = list(files_root.rglob(f"*{acc}*"))
+            for h in hits:
+                if h.is_file():
+                    index.setdefault(acc, h.resolve())
+                    break
+
+    return index
+
+
+def build_encff_index_by_scanning(files_root: Path) -> dict:
+    """
+    Aggressive fallback: scan ALL files under files_root and map any that contain ENCFF in
+    the filename or any parent directory name.
+    """
+    index = {}
+
+    # Fast path: common extensions first (prefer gz)
+    for ext in ("*.fastq.gz", "*.fq.gz", "*.fastq", "*.fq", "*.gz"):
+        for p in files_root.rglob(ext):
+            m = ENCFF_RE.search(str(p))  # search full path, not just name
+            if not m:
+                continue
+            acc = m.group(1)
+            index.setdefault(acc, p.resolve())
+
+    # Super-aggressive: any file anywhere that has ENCFF in its path
+    if not index:
+        for p in files_root.rglob("*"):
+            if not p.is_file():
+                continue
+            m = ENCFF_RE.search(str(p))
+            if not m:
+                continue
+            acc = m.group(1)
+            index.setdefault(acc, p.resolve())
+
+    return index
+
+
+def make_local_samplesheet(url_sheet: Path, files_root: Path, out_local: Path, manifest_tsv: Optional[Path]) -> pd.DataFrame:
+    """
+    Read ENCODEfetch nf-core samplesheet (URL-based) and replace fastq_1/fastq_2 URLs
+    with local paths found under files_root (prefer manifest.tsv mapping).
+    """
+    df = pd.read_csv(url_sheet)
+
+    encff_index = {}
+    if manifest_tsv and manifest_tsv.exists():
+        encff_index = build_encff_index_from_manifest(manifest_tsv, files_root)
+        print(f"[INFO] Built ENCFF index from manifest.tsv: {len(encff_index)} file(s) indexed.")
+    if not encff_index:
+        encff_index = build_encff_index_by_scanning(files_root)
+        print(f"[INFO] Built ENCFF index by scanning files/: {len(encff_index)} file(s) indexed.")
+
+    if not encff_index:
+        raise RuntimeError(f"No ENCFF files found under: {files_root}")
+
+    def map_fastq(v: str) -> str:
+        v = str(v).strip()
+        if not v or v == "nan":
+            return ""
+        acc = url_to_encff(v)
+
+        if acc in encff_index:
+            return str(encff_index[acc])
+
+        # Last-chance: search on disk for any file containing the accession
+        hits = [p for p in files_root.rglob(f"*{acc}*") if p.is_file()]
+        if hits:
+            encff_index[acc] = hits[0].resolve()
+            return str(encff_index[acc])
+
+        # File not found - print warning and return empty string
+        print(f"[WARN] Local file not found for {acc} (from {v}), skipping this file")
+        return ""
+
+    for col in ("fastq_1", "fastq_2"):
+        if col in df.columns:
+            df[col] = df[col].fillna("").map(map_fastq)
+
+    df.to_csv(out_local, index=False)
+    print(f"[INFO] Wrote local-path samplesheet: {out_local}")
+    return df
+
+
+def convert_to_nfcore_v2_1_0(df: pd.DataFrame, out_v2: Path) -> pd.DataFrame:
+    """
+    nf-core/chipseq v2.1.0 expects header EXACTLY:
+    sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate
+    """
+    df = df.copy()
+    if "single_end" in df.columns:
+        df = df.drop(columns=["single_end"])
+
+    required = ["sample", "fastq_1", "fastq_2", "replicate", "antibody", "control", "control_replicate"]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise RuntimeError(f"Missing required columns for nf-core v2.1.0: {missing}")
+
+    df = df[required].copy()
+    df.to_csv(out_v2, index=False)
+    print(f"[INFO] Wrote nf-core v2.1.0-format samplesheet: {out_v2}")
+    return df
+
+
+def fix_control_replicates(df: pd.DataFrame, out_fixed: Path) -> pd.DataFrame:
+    """
+    Renumber control sample replicates to 1..N (per control sample),
+    then set control_replicate for each case row to match its replicate when possible.
+    """
+    df = df.copy()
+
+    control_samples = sorted(set(df["control"].dropna().astype(str)) - {""})
+
+    for s in control_samples:
+        idx = df.index[df["sample"] == s].tolist()
+        for n, i in enumerate(idx, start=1):
+            df.loc[i, "replicate"] = n
+
+    avail = df.groupby("sample")["replicate"].apply(lambda x: set(map(int, x.tolist()))).to_dict()
+
+    def fix_crep(row):
+        ctrl = str(row.get("control", "")).strip()
+        if not ctrl:
+            return row.get("control_replicate")
+        rep = int(row["replicate"])
+        if rep in avail.get(ctrl, set()):
+            return rep
+        a = avail.get(ctrl, {1})
+        return min(a) if a else 1
+
+    df["control_replicate"] = df.apply(fix_crep, axis=1).astype(int)
+
+    df.to_csv(out_fixed, index=False)
+    print(f"[INFO] Wrote control-fixed samplesheet: {out_fixed}")
+    return df
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="Prepare ENCODEfetch subset for nf-core/chipseq: rename gzip FASTQs and generate local nf-core samplesheets."
+    )
+    ap.add_argument("--subset-dir", default=".", help="Path to encode_subset directory (default: current dir).")
+    ap.add_argument("--files-dir", default="files", help="Relative path to files/ under subset-dir (default: files).")
+    ap.add_argument("--url-samplesheet", default="nfcore_chipseq_samplesheet.csv",
+                    help="ENCODEfetch-produced URL samplesheet filename (default: nfcore_chipseq_samplesheet.csv).")
+    ap.add_argument("--manifest", default="manifest.tsv",
+                    help="ENCODEfetch manifest.tsv filename (default: manifest.tsv).")
+    args = ap.parse_args()
+
+    subset = Path(args.subset_dir).resolve()
+    files_root = (subset / args.files_dir).resolve()
+    url_sheet = (subset / args.url_samplesheet).resolve()
+    manifest_tsv = (subset / args.manifest).resolve()
+
+    if not files_root.exists():
+        sys.exit(f"[ERROR] files directory not found: {files_root}")
+    if not url_sheet.exists():
+        sys.exit(f"[ERROR] URL samplesheet not found: {url_sheet}")
+
+    rename_misnamed_fastqs(files_root)
+
+    # Create temporary local samplesheet with URLs replaced
+    out_local = subset / "nfcore_chipseq_samplesheet.local.csv"
+    df_local = make_local_samplesheet(url_sheet, files_root, out_local, manifest_tsv if manifest_tsv.exists() else None)
+
+    # Convert to nf-core v2.1.0 format (removes single_end column)
+    df_v2 = df_local.copy()
+    if "single_end" in df_v2.columns:
+        df_v2 = df_v2.drop(columns=["single_end"])
+    
+    required = ["sample", "fastq_1", "fastq_2", "replicate", "antibody", "control", "control_replicate"]
+    missing = [c for c in required if c not in df_v2.columns]
+    if missing:
+        raise RuntimeError(f"Missing required columns for nf-core v2.1.0: {missing}")
+    df_v2 = df_v2[required].copy()
+
+    # Fix control replicates
+    control_samples = sorted(set(df_v2["control"].dropna().astype(str)) - {""})
+    for s in control_samples:
+        idx = df_v2.index[df_v2["sample"] == s].tolist()
+        for n, i in enumerate(idx, start=1):
+            df_v2.loc[i, "replicate"] = n
+
+    avail = df_v2.groupby("sample")["replicate"].apply(lambda x: set(map(int, x.tolist()))).to_dict()
+
+    def fix_crep(row):
+        ctrl = str(row.get("control", "")).strip()
+        if not ctrl:
+            return row.get("control_replicate")
+        rep = int(row["replicate"])
+        if rep in avail.get(ctrl, set()):
+            return rep
+        a = avail.get(ctrl, {1})
+        return min(a) if a else 1
+
+    df_v2["control_replicate"] = df_v2.apply(fix_crep, axis=1).astype(int)
+
+    # Save final output
+    df_v2.to_csv(out_local, index=False)
+
+    print("\n[SUMMARY]")
+    print("Final local samplesheet:", out_local)
+    print("Rows:", len(df_v2))
+    print("Ready for nf-core/chipseq v2.1.0")
+
+
+if __name__ == "__main__":
+    main()
