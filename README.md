@@ -254,7 +254,7 @@ nextflow run nf-core/chipseq -r 2.1.0 -profile singularity \
   --input raw/encode_results/nfcore_chipseq_samplesheet.csv \
   --outdir out/nfcore_chipseq \
   --genome GRCh38 \
-  --narrow_peaks \
+  --narrow_peak \
   -resume
 ```
 
