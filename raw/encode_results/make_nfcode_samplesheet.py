@@ -271,6 +271,66 @@ def fix_control_replicates(df: pd.DataFrame, out_fixed: Path) -> pd.DataFrame:
     return df
 
 
+def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean ChIP/control pairings in an nf-core/chipseq v2.1.0 samplesheet.
+
+    Fixes three classes of problems that ENCODEfetch leaves in the sheet:
+      1. Comma-joined control IDs (e.g. 'ENCSR001BSB,ENCSR704GTT' in a single
+         'control' cell) are collapsed to the first ID so nf-core can resolve
+         it against the 'sample' column.
+      2. ChIP rows whose control does not resolve to any sample in the sheet
+         (true orphans) are dropped. Leaving them would either fail schema
+         validation or run MACS2 without input, producing noisy peaks.
+      3. Control-style rows (antibody blank) that no ChIP row references are
+         dropped. Leaving them wastes alignment compute with no downstream use.
+
+    Prints a before/after summary. Returns the cleaned dataframe.
+    """
+    df = df.copy()
+    n0 = len(df)
+
+    def _pick_first(v):
+        s = str(v).strip()
+        if not s or s.lower() == "nan":
+            return pd.NA
+        return s.split(",")[0].strip() or pd.NA
+
+    had_comma = int(df["control"].astype(str).str.contains(",", na=False).sum())
+    df["control"] = df["control"].map(_pick_first)
+
+    def _chip_mask(frame):
+        return frame["antibody"].notna() & frame["antibody"].astype(str).str.strip().ne("")
+
+    chip_mask = _chip_mask(df)
+    ctrl_mask = ~chip_mask
+    ctrl_sample_ids = set(df.loc[ctrl_mask, "sample"].astype(str))
+
+    ctrl_valid = df["control"].notna() & df["control"].astype(str).isin(ctrl_sample_ids)
+    drop_chip_mask = chip_mask & ~ctrl_valid
+    n_drop_chip_rows = int(drop_chip_mask.sum())
+    n_drop_chip_samples = int(df.loc[drop_chip_mask, "sample"].nunique())
+    df = df.loc[~drop_chip_mask].copy()
+
+    chip_mask = _chip_mask(df)
+    ctrl_mask = ~chip_mask
+    referenced = set(df.loc[chip_mask, "control"].dropna().astype(str))
+    unused_ctrl_mask = ctrl_mask & ~df["sample"].astype(str).isin(referenced)
+    n_drop_ctrl_rows = int(unused_ctrl_mask.sum())
+    n_drop_ctrl_samples = int(df.loc[unused_ctrl_mask, "sample"].nunique())
+    df = df.loc[~unused_ctrl_mask].copy()
+
+    print("[SANITIZE] Pairing cleanup:")
+    print(f"  comma-joined control cells collapsed : {had_comma}")
+    print(f"  orphan ChIP rows dropped             : {n_drop_chip_rows} "
+          f"({n_drop_chip_samples} unique ChIP samples)")
+    print(f"  unused control rows dropped          : {n_drop_ctrl_rows} "
+          f"({n_drop_ctrl_samples} unique control samples)")
+    print(f"  rows before -> after                 : {n0} -> {len(df)}")
+
+    return df.reset_index(drop=True)
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Prepare ENCODEfetch subset for nf-core/chipseq: rename gzip FASTQs and generate local nf-core samplesheets."
@@ -309,6 +369,10 @@ def main():
     if missing:
         raise RuntimeError(f"Missing required columns for nf-core v2.1.0: {missing}")
     df_v2 = df_v2[required].copy()
+
+    # Sanitize ChIP/control pairings BEFORE replicate renumbering so that
+    # the replicate logic only operates on rows that will actually run.
+    df_v2 = sanitize_pairings(df_v2)
 
     # Fix control replicates
     control_samples = sorted(set(df_v2["control"].dropna().astype(str)) - {""})
