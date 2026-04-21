@@ -1,0 +1,62 @@
+#!/bin/bash
+# ------------------------------------------------------------------------------
+# SLURM driver script for nf-core/chipseq v2.1.0
+#
+# Usage:
+#   sbatch optimization_plan/submit_driver.sh                  # defaults to member4
+#   sbatch optimization_plan/submit_driver.sh member3          # different batch
+#
+# This driver is small on purpose. Real compute happens in child SLURM jobs
+# that Nextflow submits via executor='slurm' in the config.
+# ------------------------------------------------------------------------------
+
+#SBATCH -J nf-chipseq
+#SBATCH -p cscc-cpu-p
+#SBATCH --qos=cscc-cpu-qos
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=07-00:00:00
+#SBATCH -o logs/driver-%x-%j.log
+#SBATCH -e logs/driver-%x-%j.err
+# NOTE: do NOT set --nodelist here. Driver can run anywhere; children spread freely.
+
+set -euo pipefail
+
+BATCH="${1:-member4}"
+PROJECT_ROOT="/scratch/$USER/work/${BATCH}/dbsuper_pipeline"
+
+cd "$PROJECT_ROOT"
+mkdir -p logs
+
+# ---- Environment activation (adjust to your cluster) ------------------------
+# Option A: module-based
+# module load nextflow/23.10 singularity/3.11
+
+# Option B: conda-based
+# source "$HOME/miniconda3/etc/profile.d/conda.sh"
+# conda activate nfcore
+
+# ---- Sanity checks ----------------------------------------------------------
+SAMPLESHEET="raw/encode_results/nfcore_chipseq_samplesheet.final.csv"
+CONFIG="nfcore_chipseq.config"
+
+[[ -f "$SAMPLESHEET" ]] || { echo "Missing $SAMPLESHEET"; exit 1; }
+[[ -f "$CONFIG"      ]] || { echo "Missing $CONFIG";      exit 1; }
+
+echo "[$(date)] Launching nf-core/chipseq driver for batch=$BATCH"
+echo "  samplesheet : $SAMPLESHEET"
+echo "  config      : $CONFIG"
+echo "  outdir      : out/$BATCH"
+
+# ---- Launch -----------------------------------------------------------------
+nextflow run nf-core/chipseq -r 2.1.0 \
+  -profile singularity \
+  -c "$CONFIG" \
+  -resume \
+  --input   "$SAMPLESHEET" \
+  --outdir  "out/$BATCH" \
+  --genome  GRCh38 \
+  --read_length 50 \
+  --narrow_peak
+
+echo "[$(date)] Driver exit status: $?"

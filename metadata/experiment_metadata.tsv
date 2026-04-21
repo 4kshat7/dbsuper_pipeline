@@ -1,0 +1,914 @@
+experiment_accession	is_control	biosample	target	run_type	n_files	bio_reps	tech_reps	platform	sex	organism	replication_type
+ENCSR000AKC	False	GM12878	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	female	Homo sapiens	isogenic
+ENCSR000AKJ	True	GM12878		single-ended	2	2	2	Illumina Genome Analyzer IIe	female	Homo sapiens	isogenic
+ENCSR000AKP	False	K562	H3K27ac	single-ended	6	3	4	Illumina Genome Analyzer II	female	Homo sapiens	isogenic
+ENCSR000AKY	True	K562		single-ended	5	3	4	Illumina Genome Analyzer IIe	female	Homo sapiens	isogenic
+ENCSR000ALB	False	endothelial cell of umbilical vein	H3K27ac	single-ended	2	3	3	Illumina Genome Analyzer IIx	unknown	Homo sapiens	anisogenic
+ENCSR000ALG	True	endothelial cell of umbilical vein		single-ended	3	2	4	Illumina Genome Analyzer IIx	unknown	Homo sapiens	anisogenic
+ENCSR000ALK	False	keratinocyte	H3K27ac	single-ended	2	3	3	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000ALS	True	keratinocyte		single-ended	2	2	2	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000ALW	False	mammary epithelial cell	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	female	Homo sapiens	isogenic
+ENCSR000AMI	True	H1		single-ended	19	5	13	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR000AMN	True	mammary epithelial cell		single-ended	8	2	4	Illumina Genome Analyzer II	female	Homo sapiens	isogenic
+ENCSR000AMO	False	HepG2	H3K27ac	single-ended	6	3	4	Illumina Genome Analyzer IIe	male	Homo sapiens	isogenic
+ENCSR000AMR	False	fibroblast of lung	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	male	Homo sapiens	anisogenic
+ENCSR000AMZ	True	fibroblast of lung		single-ended	2	2	2	Illumina Genome Analyzer IIe	male	Homo sapiens	anisogenic
+ENCSR000ANF	False	skeletal muscle myoblast	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	male	Homo sapiens	isogenic
+ENCSR000ANN	True	skeletal muscle myoblast		single-ended	2	2	2	Illumina Genome Analyzer IIx	male	Homo sapiens	isogenic
+ENCSR000ANP	False	H1	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIx	male	Homo sapiens	isogenic
+ENCSR000ANT	True	myotube		single-ended	2	2	3	Illumina Genome Analyzer II	male	Homo sapiens	isogenic
+ENCSR000ANV	False	myotube	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	male	Homo sapiens	isogenic
+ENCSR000AOB	True	HeLa-S3		single-ended	2	2	2	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000AOC	False	HeLa-S3	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000AOP	True	astrocyte		single-ended	6	2	4	Illumina Genome Analyzer IIx	unknown	Homo sapiens	isogenic
+ENCSR000AOQ	False	astrocyte	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	unknown	Homo sapiens	isogenic
+ENCSR000APH	False	osteoblast	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIe	unknown	Homo sapiens	anisogenic
+ENCSR000APN	False	fibroblast of dermis	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer II	unknown	Homo sapiens	isogenic
+ENCSR000APT	True	fibroblast of dermis		single-ended	6	3	4	Illumina Genome Analyzer IIx	unknown	Homo sapiens	isogenic
+ENCSR000APU	True	osteoblast		single-ended	2	3	4	Illumina Genome Analyzer II	unknown	Homo sapiens	anisogenic
+ENCSR000AQW	False	DND-41	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIx	male	Homo sapiens	isogenic
+ENCSR000ASA	True	DND-41		single-ended	2	2	2	Illumina Genome Analyzer	male	Homo sapiens	isogenic
+ENCSR000ASJ	False	CD14-positive monocyte	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer	female	Homo sapiens	isogenic
+ENCSR000ASR	True	A549		single-ended	2	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR000ASS	True	A549		single-ended	6	4	4	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR000AUI	False	A549	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR000AUP	False	B cell	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR000AUU	True	CD14-positive monocyte		single-ended	4	3	3	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR000AUW	True	B cell		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR000AVF	False	A549	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR000DPL	False	AG04450	H3K27ac	single-ended	2	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR000DPN	True	AG04450		single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR000EUT	False	HCT116	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer	male	Homo sapiens	isogenic
+ENCSR000EUX	True	HCT116		single-ended	2	2	2	Illumina Genome Analyzer	male	Homo sapiens	isogenic
+ENCSR000EVA	True	HEK293		single-ended	1	1	1	Illumina Genome Analyzer	female	Homo sapiens	unreplicated
+ENCSR000EWR	False	MCF-7	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer	female	Homo sapiens	isogenic
+ENCSR000EWW	True	MCF-7		single-ended	2	2	2	Illumina Genome Analyzer	female	Homo sapiens	isogenic
+ENCSR000EXK	False	Panc1	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer II	male	Homo sapiens	isogenic
+ENCSR000EXM	True	Panc1		single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR000FCH	False	HEK293	H3K27ac	single-ended	3	2	3	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000FCU	False	SK-N-SH	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIx	female	Homo sapiens	isogenic
+ENCSR000FDA	True	SK-N-SH		single-ended	2	1	2	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR000JGO	True	brain microvascular endothelial cell		paired-ended	1	1	1	Illumina HiSeq 4000	unknown	Homo sapiens	unreplicated
+ENCSR000NPF	False	cardiac muscle cell	H3K27ac	single-ended	10	2	2	Illumina HiSeq 2500	unknown	Homo sapiens	isogenic
+ENCSR001BSB	True	IMR-90		single-ended	4	1	2	Illumina Genome Analyzer II	female	Homo sapiens	unreplicated
+ENCSR001KCX	True	bipolar neuron		paired-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR001SHB	False	stomach	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR001UFN	True	gastrocnemius medialis		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR002YRE	False	IMR-90	H3K27ac	single-ended	5	2	3	Illumina Genome Analyzer II	female	Homo sapiens	isogenic
+ENCSR004EKY	False	muscle layer of colon	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR004HIE	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR004YQD	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR006ANF	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR007HLH	False	CD8-positive, alpha-beta T cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR007WYC	True	ascending aorta		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR007YOT	False	GM23248	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR010OVI	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR011BHU	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR011GWK	True	PC-9		paired-ended	9	2	2	Illumina HiSeq 2500	unknown	Homo sapiens	isogenic
+ENCSR011MGQ	False	subcutaneous abdominal adipose tissue	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR012PII	False	CD14-positive monocyte	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR013KEC	False	mesenchymal stem cell	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR014TDK	False	temporal lobe	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR015GFK	False	thoracic aorta	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR016XBE	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR018KWK	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR020OIW	True	muscle layer of colon		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR023HXE	True	CD4-positive, alpha-beta T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR025KPY	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR027BPE	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR028NXO	False	heart right ventricle	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR028QEA	False	placenta	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR029SIG	False	pancreas	H3K27ac	single-ended	16	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR033XKQ	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR034RQV	False	parathyroid adenoma	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR034ZKE	False	breast epithelium	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR038JBA	True	UCSF-4		single-ended	4	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR039AHR	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR041UZZ	False	T-helper 17 cell	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR043UWF	True	adrenal gland		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR049JKQ	True	heart right ventricle		single-ended	12	1	3	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR049LCN	True	heart right ventricle		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR051QLZ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR054BKO	False	urinary bladder	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR055XHN	True	HepG2		single-ended	12	3	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR055YMD	True	amnion		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR058XPK	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR059MVB	False	ACC112	H3K27ac	single-ended	3	2	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR059QYS	True	liver		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR059VTG	True	tibial nerve		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR061EXX	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR061IAQ	False	ovary	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR061VJM	True	lung		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR063AUO	True	OCI-LY7		single-ended	4	3	5	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR064RLF	True	thymus		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR065SKV	False	CD14-positive monocyte	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR066GUY	False	placental basal plate	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR067BGS	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR067CHO	True	pancreas		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR069EGE	False	transverse colon	H3K27ac	single-ended	10	3	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR069UMW	False	ascending aorta	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR071DPR	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR071ILJ	True	adrenal gland		single-ended	16	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR072QNY	True	CD8-positive, alpha-beta T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR074ECR	False	right cardiac atrium	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR074WNF	True	CD4-positive, alpha-beta T cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR078LIZ	False	colonic mucosa	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR079HOU	True	cingulate gyrus		single-ended	2	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR080WMI	True	mesendoderm		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR081OTO	False	breast epithelium	H3K27ac	single-ended	8	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR082SHT	False	adipose tissue	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR085WWL	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR086BNR	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR086NVH	True	iPS DF 19.11		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR086QZY	False	adrenal gland	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR086XCT	False	spleen	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR089ZLR	True	lower lobe of left lung		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR091KXI	False	tibial nerve	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR094VJC	False	adrenal gland	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR095YMD	False	esophagus muscularis mucosa	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR096QCF	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR099LGH	True	body of pancreas		single-ended	5	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR099RQB	True	sigmoid colon		single-ended	8	1	4	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR102GGG	False	CD14-positive monocyte	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR102XUM	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR103IXF	True	dorsolateral prefrontal cortex		single-ended	28	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR105CRB	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR105EMQ	False	peripheral blood mononuclear cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR105VFR	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR107PGG	True	hepatocyte		single-ended	5	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR107RQX	True	large intestine		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR108NVQ	False	foreskin fibroblast	H3K27ac	paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR109IWL	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR111QCU	False	brain microvascular endothelial cell	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	unknown	Homo sapiens	isogenic
+ENCSR111ZAD	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR113CMI	True	foreskin keratinocyte		paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR113QDZ	True	prostate gland		single-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR113XPE	True	spinal cord		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR116MKX	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR116QUS	True	aorta		single-ended	2	1	2	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR118FQN	True	Peyer's patch		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR119AVG	True	spleen		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR119XNK	False	right lobe of liver	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR120ITZ	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR120WKZ	False	naive thymus-derived CD4-positive, alpha-beta T cell	H3K27ac	single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR122GIL	True	coronary artery		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR123HEE	False	layer of hippocampus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR123WDC	True	CD8-positive, alpha-beta memory T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR124GAS	True	Peyer's patch		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR124KQG	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	male	Homo sapiens	unreplicated
+ENCSR124VOE	False	neural cell	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR125KVG	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR126UEY	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR126ZPV	True	layer of hippocampus		single-ended	2	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR128HTH	True	placenta		single-ended	8	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR130HAG	True	pancreas		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR131DVD	False	HAP-1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR131SEB	True	epithelial cell of prostate		paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR133NBJ	False	stomach	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR136KIM	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR136ZQZ	False	testis	H3K27ac	single-ended	8	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR137ZID	False	pancreas	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR138DOM	False	CD4-positive, alpha-beta T cell	H3K27ac	single-ended	5	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR138TQF	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	16	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR138WRC	True	gastrocnemius medialis		single-ended	16	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR139WMA	True	psoas muscle		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR143DQF	True	cingulate gyrus		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR143XNJ	False	esophagus squamous epithelium	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR145RXI	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR147KFH	True	esophagus muscularis mucosa		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR149EOW	True	ovary		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR150QXE	False	heart left ventricle	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR151NEZ	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR152HLZ	True	tibial nerve		single-ended	8	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR152MAZ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR153LYY	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR154SJE	True	tibial nerve		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR155GOF	True	foreskin keratinocyte		paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR156MYA	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR156WTZ	True	esophagus squamous epithelium		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR156XNC	False	peripheral blood mononuclear cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR158PLZ	True	thoracic aorta		single-ended	6	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR161JTT	True	esophagus		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR163UEW	True	psoas muscle		single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR163VJS	True	adipose tissue		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR163XFK	True	coronary artery		single-ended	6	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR164POT	True	thyroid gland		single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR165CDY	False	left ventricle myocardium inferior	H3K27ac	single-ended	16	2	4	Illumina NextSeq 500	male	Homo sapiens	isogenic
+ENCSR168STG	True	parathyroid adenoma		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR170MAJ	False	spleen	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR170MJE	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR174GMQ	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR175ABH	False	heart right ventricle	H3K27ac	single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR175HRD	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	male	Homo sapiens	unreplicated
+ENCSR175XPY	False	colonic mucosa	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR177QFY	False	adrenal gland	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR178FVP	True	heart left ventricle		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR178MWD	True	gastroesophageal sphincter		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR179YLS	True	SU-DHL-6		single-ended	7	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR180YHA	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR181OHF	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR185OHN	True	SK-N-SH		paired-ended	4	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR189JIH	False	uterus	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR189QAD	False	adrenal gland	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR189UPU	True	spleen		single-ended	14	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR191ZQT	False	B cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR193TCX	True	layer of hippocampus		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR194KGO	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR195BZZ	True	right atrium auricular region		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR195CFR	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR195JWZ	False	gastroesophageal sphincter	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR196CXJ	True	A673		single-ended	3	2	3	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR198WIH	True	HCT116		single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR200ETW	False	endodermal cell	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR200JVJ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR200QAA	True	spleen		single-ended	4	1	1	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR201KGX	True	aorta		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR201VAH	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	male	Homo sapiens	unreplicated
+ENCSR203KCB	False	thyroid gland	H3K27ac	single-ended	4	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR203KEU	False	RWPE1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR204GMP	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR204OJS	False	stomach	H3K27ac	single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR204TAU	False	esophagus squamous epithelium	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR207ABA	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR207FYD	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR208QRN	False	transverse colon	H3K27ac	single-ended	12	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR209QGZ	False	spinal cord	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR210ZPC	False	smooth muscle cell	H3K27ac	single-ended	3	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR212FST	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR212SJH	True	iPS DF 6.9		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR213SMK	False	sigmoid colon	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR214MNL	True	H9		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR214UPJ	True	foreskin fibroblast		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR214UZE	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR215WNN	True	testis		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR217SDT	False	BLaER1	H3K27ac	single-ended	3	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR220TRW	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR222QLW	False	T-cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR223UPC	False	HUES48	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR227FYJ	False	foreskin melanocyte	H3K27ac	paired-ended	4	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR230BWN	False	kidney	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR230IMS	False	liver	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR232ABT	True	chorion		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR233RWF	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR234FYG	True	adrenal gland		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR235KRX	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR235ZBF	False	spleen	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR236NLU	True	liver		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR237ZMF	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR239LAP	True	spleen		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR240GDT	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR242AHB	False	ovary	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR242TBH	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR243LHN	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR245GEV	False	pancreas	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR247BVB	True	CD8-positive, alpha-beta T cell		single-ended	3	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR247FUH	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR247NUF	True	colonic mucosa		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR247XFQ	True	breast epithelium		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR248IFK	True	RWPE1		paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR249IKQ	False	Peyer's patch	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR249INE	False	uterus	H3K27ac	single-ended	6	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR250EHC	False	A549	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR250NHD	False	psoas muscle	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR251PPB	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR255BOF	True	KOPT-K1		single-ended	5	2	3	Illumina HiSeq 2500	unknown	Homo sapiens	isogenic
+ENCSR255MIG	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	male	Homo sapiens	unreplicated
+ENCSR255SDP	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR258GSA	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR261PLD	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR262JRZ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	24	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR264DYL	True	urinary bladder		single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR264HOB	True	MM.1S		single-ended	5	3	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR266XMB	True	thoracic aorta		single-ended	3	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR267YXV	False	neutrophil	H3K27ac	single-ended	8	2	3	Illumina HiSeq 2500	unknown	Homo sapiens	anisogenic
+ENCSR268BDW	True	SJSA1		paired-ended	1	1	1	Illumina HiSeq 4000	male	Homo sapiens	unreplicated
+ENCSR268JQE	False	ovary	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	female	Homo sapiens	unreplicated
+ENCSR268ZCF	False	sigmoid colon	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR274VPI	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR276SJT	True	right lobe of liver		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR278ACD	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR278JAH	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	16	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR278VUZ	True	placenta		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR279KIX	False	C4-2B	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR285NFQ	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR291VCJ	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR293XMP	True	HUES64		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR293ZPH	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR295FXG	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR299EQJ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR300BKE	True	neuronal stem cell		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR300ZUS	True	B cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR303IKJ	False	thymus	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR305ISQ	False	mucosa of rectum	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR306YLG	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR307DQT	False	SU-DHL-6	H3K27ac	single-ended	4	3	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR308JFE	True	neural cell		single-ended	8	2	6	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR309LQG	True	right lobe of liver		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR309MYO	True	HL-60		paired-ended	1	1	1	Illumina HiSeq 4000	female	Homo sapiens	unreplicated
+ENCSR310TYO	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR312HLG	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	male	Homo sapiens	isogenic
+ENCSR313CEH	False	lower lobe of left lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR314BEX	False	CD4-positive, alpha-beta memory T cell	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR314KMO	True	caudate nucleus		single-ended	2	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR315IRO	False	HUES6	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR315NIO	True	temporal lobe		single-ended	2	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR315UUP	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR316LNO	False	gastroesophageal sphincter	H3K27ac	single-ended	10	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR316UPM	True	mucosa of rectum		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR316ZPQ	True	sigmoid colon		single-ended	8	1	4	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR317VER	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR318HUC	False	thoracic aorta	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR321KDV	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR321LKT	False	layer of hippocampus	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR322TJD	False	aorta	H3K27ac	single-ended	1	1	2	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR324JDC	False	endocrine pancreas	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR324VMZ	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR325PXS	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR325VCV	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR326YRW	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	16	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR327PYZ	True	skin epidermis		single-ended	12	1	1	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR327XTS	False	colonic mucosa	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR328AHC	True	PC-3		single-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR329FXI	False	skeletal muscle tissue	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR329HFV	True	tibial nerve		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR330SVG	True	colonic mucosa		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR334DRN	False	skin epidermis	H3K27ac	single-ended	8	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR339WBT	True	neuronal stem cell		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR339XMR	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR340NAL	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR340OJR	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR340ZTB	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR342KXD	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR343DFX	False	spleen	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR343GIV	True	gastroesophageal sphincter		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR344CSQ	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR344ERJ	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR344PHP	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR346FVK	False	vagina	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR347KLR	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR347VUG	True	thyroid gland		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR349VAW	False	SJSA1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR350EFV	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR354HOM	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR355GNZ	False	coronary artery	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR355RJN	True	naive thymus-derived CD4-positive, alpha-beta T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR355UYP	False	cingulate gyrus	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR360NJD	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR361GKY	True	OCI-LY3		single-ended	5	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR363KHN	True	chorionic villus		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR367UDO	True	Karpas-422		single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR367WYJ	False	psoas muscle	H3K27ac	single-ended	3	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR368CYW	False	NCI-H929	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	female	Homo sapiens	isogenic
+ENCSR368NLE	True	right atrium auricular region		single-ended	6	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR370OQJ	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR373OML	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR376YUP	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR379DNM	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR379WXM	False	neurosphere	H3K27ac	paired-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR380KOO	False	angular gyrus	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR384KIB	True	transverse colon		single-ended	16	2	5	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR385ODY	True	testis		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR386CKJ	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR386UHY	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR391EQV	False	natural killer cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR391NPE	False	22Rv1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	isogenic
+ENCSR394DWD	True	RWPE2		paired-ended	3	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR394ZWY	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR397NQK	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR399JUL	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR399QWL	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR400XSW	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR401KZW	False	spleen	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR402HFW	False	pancreas	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR402JWL	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR403PZH	False	psoas muscle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR403VPZ	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR404IRS	True	parathyroid adenoma		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR405BDN	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR405ESP	False	adrenal gland	H3K27ac	single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR405FZE	False	duodenal mucosa	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR405NKC	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR405VDU	True	CD4-positive, alpha-beta memory T cell		single-ended	4	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR413QLR	False	suprapubic skin	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR413YCI	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR416ESX	True	layer of hippocampus		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR417AQU	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR419BNY	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR420XKX	True	foreskin melanocyte		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR422TGJ	True	upper lobe of left lung		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR424IJM	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR425FUS	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	male	Homo sapiens	isogenic
+ENCSR425NYG	True	foreskin melanocyte		paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR425PQI	False	trophoblast cell	H3K27ac	single-ended	2	2	2	Illumina Genome Analyzer IIx	male	Homo sapiens	isogenic
+ENCSR426VHO	False	spleen	H3K27ac	single-ended	12	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR427DIF	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR429YAE	False	iPS-18a	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR430RVP	False	amnion	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR432DPY	False	body of pancreas	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR435JKM	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR436JNB	False	spleen	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR437DCH	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR437QMD	False	stomach	H3K27ac	single-ended	2	1	2	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR438KQU	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR438NOO	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR438SPO	False	kidney	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR440PMP	False	Peyer's patch	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR443UYU	False	coronary artery	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR444GJM	True	CD14-positive monocyte		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR447OHF	False	mucosa of rectum	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR447ZGY	False	OCI-LY7	H3K27ac	paired-ended	5	2	2	Illumina NextSeq 500	male	Homo sapiens	isogenic
+ENCSR449AUD	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR449AXO	False	neural progenitor cell	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR449RSE	True	muscle of leg		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR450JZC	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR451WXC	False	BLaER1	H3K27ac	single-ended	3	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR452GUC	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR453MUW	False	upper lobe of left lung	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR454FJM	True	lower lobe of right lung		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR454VRA	False	small intestine	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR455AFK	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR456AMX	True	psoas muscle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR456XCT	True	CD4-positive, alpha-beta memory T cell		single-ended	3	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR458RRZ	False	liver	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR459LGY	True	chorionic villus		single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR461GYN	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR461UOU	True	trophoblast		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR461VPV	True	small intestine		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR462ZQL	True	pancreas		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR463NAD	False	esophagus squamous epithelium	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR465UAX	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR470SYZ	True	foreskin fibroblast		paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR473PNT	False	mesendoderm	H3K27ac	single-ended	2	3	3	Illumina Genome Analyzer IIx	male	Homo sapiens	isogenic
+ENCSR474WLZ	True	esophagus muscularis mucosa		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR475NOQ	True	thyroid gland		single-ended	5	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR479BTD	True	placental basal plate		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR479HSY	True	transverse colon		single-ended	12	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR480NNC	True	pancreas		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR480OHP	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR481QDJ	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR481SJM	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR489LNU	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	female	Homo sapiens	isogenic
+ENCSR490NCK	True	pancreas		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR491TAD	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR492PXH	False	endocrine pancreas	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR494MDB	False	caudate nucleus	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR494WCX	False	left lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR494YJW	True	ascending aorta		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR495HIT	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR498NGT	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR498ZRC	False	placenta	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR499IIR	False	chorion	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR500YBS	False	thyroid gland	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR503BIB	True	pancreas		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR505OPZ	False	iPS DF 19.11	H3K27ac	single-ended	3	2	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR505YFA	False	upper lobe of left lung	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR506FPQ	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR507SRD	False	trophoblast	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR507UDH	False	hepatocyte	H3K27ac	single-ended	3	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR510OLN	True	CD4-positive, alpha-beta T cell		single-ended	5	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR510RPC	False	left lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR514EZP	True	esophagus squamous epithelium		single-ended	10	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR516LQO	False	tibial nerve	H3K27ac	single-ended	6	1	3	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR517NSQ	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR518COE	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR519CFV	False	aorta	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR519UXW	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR520BIM	False	body of pancreas	H3K27ac	single-ended	3	2	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR520KVD	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR522MTS	False	esophagus muscularis mucosa	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR524MPL	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR524NCH	True	sigmoid colon		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR526EXI	True	heart left ventricle		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR526RGE	False	placental basal plate	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR528SMB	True	foreskin keratinocyte		paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR529OPX	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR529SWW	True	H9		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR531AUV	True	suprapubic skin		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR531MLI	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR531VWS	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR532SRK	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR534CZJ	True	HUES6		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR534KYQ	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR534WQA	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR535GFO	False	tibial artery	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR535VLV	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR538MSN	True	stomach		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR539HNK	True	stomach		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR540ADS	False	lung	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR540KQC	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	male	Homo sapiens	isogenic
+ENCSR541DBO	True	small intestine		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR543CPW	False	small intestine	H3K27ac	single-ended	3	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR543ZVZ	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR545WFH	True	esophagus muscularis mucosa		single-ended	10	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR546SDM	False	CD4-positive, alpha-beta T cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR548SPY	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR549SVK	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR549ZDH	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR550WUX	False	lung	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR554HDT	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR554RPI	True	mesodermal cell		single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR555HJT	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR556OGN	True	ectodermal cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR557DFM	False	heart left ventricle	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR557HEX	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR557RDB	True	neutrophil		single-ended	8	2	2	Illumina HiSeq 2500	unknown	Homo sapiens	anisogenic
+ENCSR557RJE	True	colonic mucosa		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR559IPI	True	prostate gland		single-ended	10	2	5	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR560BEL	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR561KOM	False	CD4-positive, alpha-beta T cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR561VNL	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR561YSH	False	sigmoid colon	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR562HZE	True	angular gyrus		single-ended	24	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR563EFJ	True	fibroblast of breast		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR563OLJ	True	spleen		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR563SVE	True	effector memory CD4-positive, alpha-beta T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR564GJK	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR564IGJ	False	SK-N-SH	H3K27ac	paired-ended	2	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR564VBC	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR564WJA	False	spleen	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR566AUD	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR568JFZ	True	skin epidermis		single-ended	6	1	1	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR569IBY	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR569IIN	True	OCI-LY1		single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR569NEE	True	H1		single-ended	2	1	1	Illumina Genome Analyzer II	male	Homo sapiens	unreplicated
+ENCSR570YPW	True	subcutaneous abdominal adipose tissue		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR572GRM	True	dorsolateral prefrontal cortex		single-ended	24	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR574WQE	True	sigmoid colon		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR576VXL	True	dorsolateral prefrontal cortex		single-ended	20	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR577BCL	True	lung		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR577GVS	False	CD4-positive, CD25-positive, alpha-beta regulatory T cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR579YLO	False	fibroblast of breast	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR580WGM	True	iPS-18a		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR581KPP	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR582UTE	False	stomach	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR583BXC	True	dorsolateral prefrontal cortex		single-ended	16	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR583DLA	True	dorsolateral prefrontal cortex		single-ended	2	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR583MIW	True	ovary		single-ended	16	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR583XAM	True	skin epidermis		single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR585FQO	True	C4-2B		paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR585UEE	True	peripheral blood mononuclear cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR586IQI	True	trophoblast		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR589NSH	True	stomach smooth muscle		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR590YGY	True	foreskin fibroblast		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR592KRF	True	heart right ventricle		single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR593INW	False	spleen	H3K27ac	single-ended	14	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR593KDJ	False	right atrium auricular region	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR595SMV	True	CD4-positive, alpha-beta memory T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR596PFU	False	body of pancreas	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR597BWL	False	thyroid gland	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR597PTH	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR597RXN	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	12	1	3	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR597UDW	False	OCI-LY1	H3K27ac	paired-ended	3	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR597ULV	False	VCaP	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR600TOW	False	gastroesophageal sphincter	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR601VHO	False	gastrocnemius medialis	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR603KDJ	True	chorionic villus		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR603SVD	True	neural progenitor cell		single-ended	7	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR604JDV	False	cingulate gyrus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR606WJA	False	chorionic villus	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR607IHY	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR607UWA	True	vagina		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR608IVH	True	left ventricle myocardium inferior		single-ended	16	2	4	Illumina NextSeq 500	male	Homo sapiens	isogenic
+ENCSR608XIG	False	temporal lobe	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR612BWE	False	pancreas	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR613JAK	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR614NPG	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR615HXA	False	peripheral blood mononuclear cell	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR617MEB	True	temporal lobe		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR617ONQ	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR619POC	False	chorionic villus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR619TOU	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR620AZM	False	common myeloid progenitor, CD34-positive	H3K27ac	single-ended	3	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR620XWM	True	vagina		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR621OKB	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR625BDY	True	peripheral blood mononuclear cell		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR627RBH	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR628GIZ	True	stomach		single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR629GZZ	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR632MPN	True	heart left ventricle		single-ended	16	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR633OJL	True	mesenchymal stem cell		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR634QZP	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR637ISS	False	foreskin keratinocyte	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR638CSE	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR639HUV	True	muscle of trunk		single-ended	3	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR640XRV	False	transverse colon	H3K27ac	single-ended	14	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR641QPH	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR641SDI	False	sigmoid colon	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR641YLG	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR642HHF	False	adrenal gland	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR642LNB	True	muscle layer of duodenum		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR642QDW	True	gastroesophageal sphincter		single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR642TGI	True	duodenal mucosa		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR643TBI	False	chorionic villus	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR644CBZ	True	naive thymus-derived CD4-positive, alpha-beta T cell		single-ended	3	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR644XSS	True	esophagus squamous epithelium		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR645MXO	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR645SYH	False	esophagus	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	female	Homo sapiens	unreplicated
+ENCSR646FGM	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR648VOG	True	trophoblast cell		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR650AIN	True	left lung		single-ended	20	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR650EVQ	True	endodermal cell		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR650OZF	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR651ISB	True	transverse colon		single-ended	20	3	6	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR652EPR	True	esophagus squamous epithelium		single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR652ULP	True	right cardiac atrium		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR652ZLE	True	spleen		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR655XLM	False	small intestine	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR656PGJ	False	UCSF-4	H3K27ac	paired-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR656ZEQ	False	rectal smooth muscle tissue	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR659RHV	False	large intestine	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR659WYW	True	fibroblast of breast		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR660IQS	False	Karpas-422	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR661KMA	False	HCT116	H3K27ac	single-ended	2	2	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR663GIS	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	male	Homo sapiens	unreplicated
+ENCSR664MLM	True	rectal smooth muscle tissue		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR666TFS	False	foreskin keratinocyte	H3K27ac	paired-ended	4	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR668DIS	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR668EVA	False	right atrium auricular region	H3K27ac	single-ended	8	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR668GBL	False	spleen	H3K27ac	single-ended	16	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR672UXO	True	SJCRH30		paired-ended	1	1	1	Illumina HiSeq 4000	male	Homo sapiens	unreplicated
+ENCSR674VPA	False	naive thymus-derived CD4-positive, alpha-beta T cell	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR675ZDM	True	kidney		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR677LBH	False	gastroesophageal sphincter	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR678LND	False	liver	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR679OVD	False	esophagus	H3K27ac	single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR680IWU	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	male	Homo sapiens	isogenic
+ENCSR681ELN	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR681RQP	False	placenta	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR683RXF	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR683VJG	True	right lobe of liver		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR685XVI	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR687HYO	True	liver		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR687YOP	True	small intestine		single-ended	2	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR687ZCM	False	muscle of leg	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR687ZYY	True	thymus		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR688CIB	True	psoas muscle		single-ended	3	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR693VHX	False	foreskin melanocyte	H3K27ac	paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR694AEQ	True	heart left ventricle		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR694RCH	False	muscle layer of duodenum	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR696HNV	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR697MUJ	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR698TWO	True	NCI-H929		paired-ended	1	1	1	Illumina HiSeq 4000	female	Homo sapiens	unreplicated
+ENCSR698YQL	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR700CAX	True	body of pancreas		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR700LWI	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR702OVJ	False	heart left ventricle	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR704GTT	True	IMR-90		single-ended	1	1	1	Illumina Genome Analyzer II	female	Homo sapiens	unreplicated
+ENCSR704JMY	True	placental basal plate		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR704QBF	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR705BTW	False	esophagus muscularis mucosa	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR707TMM	True	common myeloid progenitor, CD34-positive		single-ended	14	5	5	Illumina Genome Analyzer IIx	female	Homo sapiens	anisogenic
+ENCSR708OCZ	True	Peyer's patch		single-ended	6	1	3	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR708TMV	True	dorsolateral prefrontal cortex		single-ended	16	1	4	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR709ABP	False	foreskin keratinocyte	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR711URW	True	spleen		single-ended	16	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR714CKG	True	common myeloid progenitor, CD34-positive		single-ended	6	2	2	Illumina Genome Analyzer II	female	Homo sapiens	isogenic
+ENCSR714GKF	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR714TJD	False	A673	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR716BTZ	True	VCaP		paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR716FUH	False	thyroid gland	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR716XDB	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR717HIA	False	placenta	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR718BTD	False	vagina	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR719FEJ	False	KOPT-K1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	isogenic
+ENCSR720GSE	True	KMS-11		paired-ended	6	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR723FET	True	WERI-Rb-1		paired-ended	1	1	1	Illumina HiSeq 4000	female	Homo sapiens	unreplicated
+ENCSR723RUM	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR724GUS	False	CD4-positive, alpha-beta memory T cell	H3K27ac	single-ended	7	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR726FHN	True	natural killer cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR726HTS	False	spleen	H3K27ac	single-ended	14	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR726WVB	False	substantia nigra	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR728EIP	True	gastroesophageal sphincter		single-ended	8	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR729ENO	False	GM23338	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR729GQT	False	iPS-20b	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR729MRJ	True	smooth muscle cell		single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR732BRB	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR734FLK	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR735SLW	False	parathyroid adenoma	H3K27ac	single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR736ALU	False	gastrocnemius medialis	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR736ZEG	False	foreskin keratinocyte	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR738SXD	False	upper lobe of left lung	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR739QEI	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR740ROX	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR741HEF	False	heart right ventricle	H3K27ac	single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR741STU	False	DOHH2	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR742WWB	True	DOHH2		single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR743DDX	False	stomach	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR744SMV	True	motor neuron		paired-ended	1	1	1	Illumina NovaSeq 6000	female	Homo sapiens	unreplicated
+ENCSR745AVM	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR746QZL	True	upper lobe of left lung		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR747HAM	False	ectodermal cell	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR748OJA	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR748TFF	False	body of pancreas	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR749PIF	True	chorion		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR749YQP	True	spleen		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR750BQT	True	upper lobe of right lung		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR750DLX	True	upper lobe of left lung		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR751BHO	False	stomach	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR752UOD	False	MCF-7	H3K27ac	single-ended	3	2	4	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR754DRC	False	motor neuron	H3K27ac	paired-ended	2	2	2	Illumina NovaSeq 6000	male	Homo sapiens	isogenic
+ENCSR754WVA	True	adrenal gland		single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR758KRK	False	Peyer's patch	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR758OEC	False	MM.1S	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR763IDK	False	prostate gland	H3K27ac	single-ended	8	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR764HZU	False	WERI-Rb-1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	female	Homo sapiens	isogenic
+ENCSR768LHG	True	MCF-7		single-ended	4	2	3	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR769CSE	False	SJCRH30	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR769FOC	False	PC-9	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	isogenic
+ENCSR770OIC	True	substantia nigra		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR770VVH	True	endocrine pancreas		single-ended	4	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR770XRC	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR771IOP	True	HAP-1		paired-ended	1	1	1	Illumina HiSeq 4000	male	Homo sapiens	unreplicated
+ENCSR771YJT	False	tibial nerve	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR772ABL	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR772LYM	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR773IYZ	True	GM23338		paired-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR773UBR	True	Peyer's patch		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR774MLK	True	upper lobe of left lung		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR775FTU	False	muscle of trunk	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR775IMI	True	gastrocnemius medialis		single-ended	3	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR776KLS	False	thymus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR776TJT	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR777AJC	True	esophagus muscularis mucosa		single-ended	6	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR777CQW	False	22Rv1	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	isogenic
+ENCSR777VQP	True	thyroid gland		single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR778NQS	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR778QHG	False	tibial nerve	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR779ISJ	False	right lobe of liver	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR780UWK	True	sigmoid colon		single-ended	2	1	2	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR783SNV	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR785LQK	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR786VUJ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR791ISZ	False	psoas muscle	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR792FSD	True	naive thymus-derived CD4-positive, alpha-beta T cell		single-ended	3	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR792VLP	False	transverse colon	H3K27ac	single-ended	12	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR793ISY	True	dorsolateral prefrontal cortex		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR798RTU	False	caudate nucleus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR799SRL	False	neuronal stem cell	H3K27ac	single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR799TWV	True	adrenal gland		single-ended	3	1	2	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR799VTP	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR801IPH	False	gastrocnemius medialis	H3K27ac	single-ended	6	2	6	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR803JPO	True	spleen		single-ended	12	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR803UDX	True	neuroepithelial stem cell		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR804MAP	False	HUES64	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR807FIZ	True	tibial artery		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR807TBS	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR807XUB	False	sigmoid colon	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR810EPZ	False	CD8-positive, alpha-beta memory T cell	H3K27ac	single-ended	3	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR810RRR	True	mesendoderm		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR814KSK	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR814QIV	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	24	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR814XCZ	True	A549		single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR815BDB	True	adrenal gland		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR818VNL	True	ovary		single-ended	1	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR819JOI	True	tibial artery		single-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR820DOR	False	BLaER1	H3K27ac	single-ended	3	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR821DYI	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR822YWX	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR822ZIG	False	foreskin fibroblast	H3K27ac	paired-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR826UTD	False	PC-3	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR828DDP	True	T-helper 17 cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR828HXJ	True	adrenal gland		single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR828XQV	True	transverse colon		single-ended	12	2	4	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR830EXC	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR831CKP	True	CD4-positive, CD25-positive, alpha-beta regulatory T cell		single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR831HVP	True	caudate nucleus		single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR833HBT	True	body of pancreas		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR835ARG	True	skeletal muscle tissue		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR835MMN	False	SK-N-MC	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR835OJV	False	CD8-positive, alpha-beta T cell	H3K27ac	single-ended	6	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR836KPL	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR836XKP	True	ACC112		single-ended	5	2	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR837CSL	False	adrenal gland	H3K27ac	single-ended	16	2	5	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR837DVF	False	lower lobe of right lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR837RXS	True	chorionic villus		single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR837SGJ	False	Peyer's patch	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR838ZAU	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR839GXY	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR839VEU	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR840FCT	False	placenta	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR841AJO	False	prostate gland	H3K27ac	single-ended	8	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR841CWN	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR842NGQ	False	neuroepithelial stem cell	H3K27ac	single-ended	2	3	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR842TXG	False	heart right ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR843OBM	True	mesenchymal stem cell		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR844YME	True	sigmoid colon		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR845BPQ	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR845IKY	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR846OTK	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR846VGG	True	lower lobe of left lung		single-ended	12	1	3	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR847AIA	False	adrenal gland	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR849NEM	True	HUES48		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR854GEV	True	stomach		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR854OXF	False	heart left ventricle	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR855NCG	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR857GMX	False	OCI-LY3	H3K27ac	single-ended	6	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR857YQI	True	kidney		single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR858ROP	True	esophagus		single-ended	3	1	3	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR859LXC	True	uterus		single-ended	6	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR860QVB	True	HUES6		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
+ENCSR860TEJ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR863BVD	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR864KVZ	False	A549	H3K27ac	single-ended	3	3	3	Illumina HiSeq 4000	male	Homo sapiens	isogenic
+ENCSR864OOO	False	right lobe of liver	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR867SJE	True	cardiac muscle cell		single-ended	4	2	2	Illumina HiSeq 2500	unknown	Homo sapiens	isogenic
+ENCSR868ZOR	False	pancreas	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR869KBA	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR869TDT	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR871SEB	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR872BBM	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR872YGQ	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR874WOQ	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR875OQJ	False	lower lobe of left lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR875QDS	False	iPS DF 6.9	H3K27ac	single-ended	1	1	1	Illumina Genome Analyzer IIx	male	Homo sapiens	unreplicated
+ENCSR876RGF	False	H9	H3K27ac	single-ended	3	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR880SUY	False	H1	H3K27ac	single-ended	3	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR884SIF	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR886ATT	True	right lobe of liver		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR887SZF	True	A549		single-ended	3	3	3	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR888RBQ	True	body of pancreas		single-ended	1	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR889RIF	True	spleen		single-ended	12	2	4	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR889TEU	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR889ZOH	True	placenta		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR890MJO	True	trophoblast cell		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR891BTJ	False	tibial artery	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR891KSP	False	common myeloid progenitor, CD34-positive	H3K27ac	single-ended	6	2	2	Illumina HiSeq 2000	female	Homo sapiens	anisogenic
+ENCSR891XGQ	False	angular gyrus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR891YGO	True	heart right ventricle		single-ended	12	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR891ZHA	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR892HPQ	False	effector memory CD4-positive, alpha-beta T cell	H3K27ac	single-ended	5	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	anisogenic
+ENCSR892XFG	False	small intestine	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR894MOX	False	esophagus muscularis mucosa	H3K27ac	single-ended	8	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR895CJW	True	iPS-20b		single-ended	4	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR895KPB	True	neurosphere		paired-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR897RRA	True	gastrocnemius medialis		single-ended	4	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR898WPF	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR899XXQ	True	SK-N-MC		single-ended	1	2	3	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR905TYC	False	bipolar neuron	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR906OSH	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR909UAG	False	esophagus squamous epithelium	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR909ZLE	False	chorion	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR910PDW	False	epithelial cell of prostate	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR912TVO	False	layer of hippocampus	H3K27ac	single-ended	6	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR913DKN	True	peripheral blood mononuclear cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR914HOJ	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR917QEH	False	foreskin fibroblast	H3K27ac	paired-ended	6	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR917XOL	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR918ESG	True	placenta		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR919BBI	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR919WLM	False	HL-60	H3K27ac	paired-ended	2	2	2	Illumina HiSeq 4000	female	Homo sapiens	isogenic
+ENCSR922FLS	True	GM23248		single-ended	9	2	3	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR927IOS	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR927MXE	True	stomach		single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR928HSI	False	heart right ventricle	H3K27ac	single-ended	1	1	2	Illumina Genome Analyzer	male	Homo sapiens	unreplicated
+ENCSR930RIA	True	T-cell		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR931WLE	False	mesodermal cell	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR932QRC	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR932WVK	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR933UGQ	True	22Rv1		paired-ended	4	2	2	Illumina HiSeq 2000	unknown	Homo sapiens	isogenic
+ENCSR936CZX	True	left lung		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR937EVN	False	sigmoid colon	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR937OPV	True	heart right ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR938FQG	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR944KAZ	False	stomach	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR945LPX	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR946LTR	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR948DNK	True	stomach		single-ended	6	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR948TOS	False	upper lobe of left lung	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR948YYZ	False	gastrocnemius medialis	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2500	male	Homo sapiens	isogenic
+ENCSR953ULK	False	fibroblast of breast	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR954IGQ	False	testis	H3K27ac	single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR954JMZ	False	upper lobe of right lung	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR954ZQC	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR955IXZ	False	KMS-11	H3K27ac	paired-ended	3	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR955OYW	True	spleen		single-ended	4	1	1	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR955XFL	False	trophoblast	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR958BKG	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR958CPV	False	skin epidermis	H3K27ac	single-ended	4	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR960VLF	True	adrenal gland		single-ended	2	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR961QMI	True	heart left ventricle		single-ended	1	1	1	Illumina HiSeq 2000	male	Homo sapiens	unreplicated
+ENCSR962EJE	True	stomach		single-ended	4	1	2	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR963LVX	False	chorionic villus	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	unknown	Homo sapiens	unreplicated
+ENCSR966IGL	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR966RWA	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR968MKZ	True	dorsolateral prefrontal cortex		single-ended	12	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR968XKG	True	dorsolateral prefrontal cortex		single-ended	16	2	4	Illumina NextSeq 500	female	Homo sapiens	isogenic
+ENCSR969HBF	False	skin epidermis	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR971ETA	False	stomach smooth muscle	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR972GGW	False	BLaER1	H3K27ac	single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR975PED	True	stomach		single-ended	1	1	1	Illumina HiSeq 2000	female	Homo sapiens	unreplicated
+ENCSR978XYH	True	BLaER1		single-ended	2	2	2	Illumina HiSeq 2000	female	Homo sapiens	isogenic
+ENCSR979XBX	True	uterus		single-ended	6	2	3	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR979YKY	True	heart left ventricle		single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR980TBV	True	breast epithelium		single-ended	4	1	2	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR981UJA	False	right lobe of liver	H3K27ac	single-ended	4	2	2	Illumina HiSeq 2500	female	Homo sapiens	isogenic
+ENCSR982AYN	True	foreskin keratinocyte		paired-ended	2	2	2	Illumina HiSeq 4000	male	Homo sapiens	anisogenic
+ENCSR982QIF	False	ascending aorta	H3K27ac	single-ended	2	1	1	Illumina HiSeq 2500	female	Homo sapiens	unreplicated
+ENCSR985CHJ	True	H1		single-ended	1	1	1	Illumina Genome Analyzer II	male	Homo sapiens	unreplicated
+ENCSR986ZZK	False	dendritic cell	H3K27ac	paired-ended	1	1	1	Illumina NextSeq 500	unknown	Homo sapiens	unreplicated
+ENCSR987FAM	False	dorsolateral prefrontal cortex	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR987PNT	False	RWPE2	H3K27ac	paired-ended	3	2	2	Illumina HiSeq 2000	male	Homo sapiens	isogenic
+ENCSR988CHU	True	skin epidermis		single-ended	2	1	1	Illumina HiSeq 2500	male	Homo sapiens	unreplicated
+ENCSR989PTS	False	heart left ventricle	H3K27ac	single-ended	8	1	2	Illumina NextSeq 500	male	Homo sapiens	unreplicated
+ENCSR993YSN	True	dorsolateral prefrontal cortex		single-ended	8	1	2	Illumina NextSeq 500	female	Homo sapiens	unreplicated
+ENCSR995BPJ	True	mucosa of rectum		single-ended	1	1	1	Illumina Genome Analyzer IIx	female	Homo sapiens	unreplicated
