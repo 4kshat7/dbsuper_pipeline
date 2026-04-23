@@ -80,7 +80,8 @@ def build_encff_index_from_manifest(manifest_tsv: Path, files_root: Path) -> dic
     Build ENCFF -> local path using manifest.tsv (preferred).
     Works even if filenames don't match *.fastq.gz patterns.
     """
-    df = pd.read_csv(manifest_tsv, sep="\t")
+    # dtype=str avoids a numpy 2.4.x dtype-inference segfault on this wide TSV
+    df = pd.read_csv(manifest_tsv, sep="\t", dtype=str)
 
     # Try to guess the accession column
     acc_cols = [c for c in df.columns if c.lower() in ("file_accession", "accession", "encff", "file")]

@@ -1,0 +1,69 @@
+after running make_nfcode_chipseq_samplesheet.py on the ENCODE ChIP-seq metadata, we have the following log of processing steps:
+
+INFO] Wrote local-path samplesheet: /nfs-stor/akshat.mistry/cluster/dbsuper_pipeline/raw/encode_results/nfcore_chipseq_samplesheet.local.csv
+[DROP-MISSING-FASTQ] Rows whose local FASTQ path was not found:
+  rows dropped (blank fastq_1)         : 443
+  rows dropped (broken paired-end)     : 0
+  samples affected                     : 143
+    fully dropped (no replicates left) : 132
+    partially dropped (some reps kept) : 11
+  rows before -> after                 : 4277 -> 3834
+  fully-dropped samples: ['ENCSR004EKY', 'ENCSR011MGQ', 'ENCSR014TDK', 'ENCSR016XBE', 'ENCSR028QEA', 'ENCSR034RQV', 'ENCSR066GUY', 'ENCSR105EMQ', 'ENCSR108NVQ', 'ENCSR120WKZ']...
+[SANITIZE] Pairing cleanup:
+  comma-joined control cells collapsed : 20
+  orphan ChIP rows dropped             : 16 (10 unique ChIP samples)
+  unused control rows dropped          : 20 (13 unique control samples)
+  rows before -> after                 : 3834 -> 3798
+[RENUMBER] Replicate normalization:
+  samples renumbered               : 758
+  control_replicate values clamped : 58
+[DEDUP] Duplicate-row cleanup:
+  duplicate control rows dropped : 3
+  duplicate ChIP rows dropped    : 0
+  rows before -> after           : 3798 -> 3795
+
+[SUMMARY]
+  Final samplesheet : /nfs-stor/akshat.mistry/cluster/dbsuper_pipeline/raw/encode_results/nfcore_chipseq_samplesheet.local.csv
+  Rows              : 3795
+  ChIP rows         : 1789 (samples: 380)
+  Control rows      : 2006 (samples: 378)
+  Ready for nf-core/chipseq v2.1.0 — running fix_samplesheet_replicates.py
+  is no longer necessary; this file is already sanitized + renumbered.
+
+
+
+
+
+
+
+
+
+
+
+
+after running make_nfcode_chipseq_samplesheet_url.py on the ENCODE ChIP-seq metadata, we have the following log of processing steps:
+
+
+[INFO] Reading URL samplesheet: /nfs-stor/akshat.mistry/cluster/dbsuper_pipeline/raw/encode_results/nfcore_chipseq_samplesheet.csv
+[INFO] Rows in URL samplesheet: 4277
+[SANITIZE] Pairing cleanup:
+  comma-joined control cells collapsed : 37
+  orphan ChIP rows dropped             : 8 (8 unique ChIP samples)
+  unused control rows dropped          : 15 (10 unique control samples)
+  rows before -> after                 : 4277 -> 4254
+[RENUMBER] Replicate normalization:
+  samples renumbered               : 895
+  control_replicate values clamped : 76
+[DEDUP] Duplicate-row cleanup:
+  duplicate control rows dropped : 21
+  duplicate ChIP rows dropped    : 0
+  rows before -> after           : 4254 -> 4233
+
+[SUMMARY]
+  Input URL samplesheet : /nfs-stor/akshat.mistry/cluster/dbsuper_pipeline/raw/encode_results/nfcore_chipseq_samplesheet.csv
+  Output URL samplesheet: /nfs-stor/akshat.mistry/cluster/dbsuper_pipeline/raw/encode_results/nfcore_chipseq_samplesheet.urls.csv
+  Rows                  : 4233  (started with 4277)
+  ChIP rows             : 2005 (samples: 450)
+  Control rows          : 2228 (samples: 445)
+  Ready for nf-core/chipseq v2.1.0 — point --input at this CSV; nf-core will fetch each FASTQ URL into its workDir at runtime.
+
