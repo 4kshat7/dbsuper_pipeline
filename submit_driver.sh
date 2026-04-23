@@ -1,6 +1,6 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------
-# SLURM driver for the dbsuper_pipeline (member1_test variant).
+# SLURM driver for the dbsuper_pipeline (member4 variant).
 #
 # Pipeline order inside the driver:
 #   1. init.sh                                (once, if not already done)
@@ -29,14 +29,15 @@
 #     make_nfcode_samplesheet.py renames them back to .fastq.gz afterwards.
 # ------------------------------------------------------------------------------
 
-#SBATCH -J nf-chipseq-m1
+#SBATCH -J nf-chipseq-m4
 #SBATCH -p cscc-cpu-p
 #SBATCH --qos=cscc-cpu-qos
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH --time=3-00:00:00
-#SBATCH -o /nfs-stor/akshat.mistry/cluster/member1_test/dbsuper_pipeline/logs/driver/driver-%x-%j.log
-#SBATCH -e /nfs-stor/akshat.mistry/cluster/member1_test/dbsuper_pipeline/logs/driver/driver-%x-%j.err
+#SBATCH -o logs/driver/driver-%x-%j.log
+#SBATCH -e logs/driver/driver-%x-%j.err
+#SBATCH --nodelist=cn-08
 
 set -euo pipefail
 
@@ -66,7 +67,11 @@ done
 [[ -z "$MEMBER" ]] && { echo "ERROR: --member is required"; usage; }
 
 # ── project layout ────────────────────────────────────────────────────────────
-PROJECT_ROOT="/nfs-stor/$USER/cluster/member1_test/dbsuper_pipeline"
+# Under sbatch, SLURM copies this script to a staging dir on the compute node,
+# so BASH_SOURCE[0] points somewhere read-only. SLURM_SUBMIT_DIR is the dir you
+# ran sbatch from (the project root, as long as you sbatch from here).
+# Falls back to BASH_SOURCE for manual `bash submit_driver.sh` runs.
+PROJECT_ROOT="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 cd "$PROJECT_ROOT"
 
 TS="$(date +%Y%m%d-%H%M%S)"
