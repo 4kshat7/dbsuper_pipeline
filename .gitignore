@@ -3,7 +3,9 @@ raw/encode_results/files/
 ref/
 out/
 nf_work/
-logs/
+# keep the logs/ directory tracked, but ignore everything inside it
+logs/*
+!logs/.gitkeep
 
 # ── Nextflow state ─────────────────────────────────────────────────────────
 .nextflow/
