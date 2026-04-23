@@ -25,16 +25,22 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="/nfs-stor/akshat.mistry/cluster/dbsuper_pipeline"
+PROJECT_ROOT="/nfs-stor/$USER/cluster/dbsuper_pipeline"
 
 cd "$PROJECT_ROOT"
 mkdir -p logs/driver logs/nextflow logs/reports
 
 # ---- Environment activation ------------------------------------------------
-source "$HOME/miniconda3/etc/profile.d/conda.sh" 2>/dev/null \
-  || source "/opt/conda/etc/profile.d/conda.sh" 2>/dev/null \
-  || { echo "Could not find conda.sh; adjust path."; exit 1; }
+# CIAI cluster: conda is installed at /apps/local/anaconda3; login shells pick
+# it up via /apps/local/conda_init.sh (same file referenced from ~/.bashrc).
+# Disable -u around activation: conda hooks (e.g. openjdk_activate.sh) read
+# $JAVA_HOME before it is set, which trips nounset.
+set +u
+source /apps/local/conda_init.sh 2>/dev/null \
+  || source /apps/local/anaconda3/etc/profile.d/conda.sh 2>/dev/null \
+  || { echo "Could not find conda init; adjust path."; exit 1; }
 conda activate encodefetch
+set -u
 
 # ---- Sanity checks ----------------------------------------------------------
 SAMPLESHEET="raw/encode_results/nfcore_chipseq_samplesheet.local.csv"

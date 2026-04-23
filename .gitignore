@@ -1,2 +1,5 @@
 raw/encode_results/files/*
 ref/*
+.nextflow*/*
+out/*
+logs/*
