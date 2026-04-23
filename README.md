@@ -1,5 +1,74 @@
 # dbsuper Pipeline
 
+## One-shot SLURM driver (`submit_driver.sh`)
+
+The whole pipeline — init → fetch → download → samplesheet → nf-core/chipseq — can be submitted as a single SLURM job. The driver wires together every step below into one re-runnable workflow with per-step logs.
+
+### Usage
+
+```bash
+# metadata + URL samplesheet only (no FASTQ download, no nextflow)
+sbatch submit_driver.sh --member 1
+
+# same, but with a custom accession subset
+sbatch submit_driver.sh --member 1 --accessions ENCSR000AKC,ENCSR000AKJ
+
+# full run: download FASTQs, build local samplesheet, launch nf-core/chipseq
+sbatch submit_driver.sh --member 1 --download
+
+# resume-only fast path: skip fetch + samplesheet, go straight to nextflow -resume
+sbatch submit_driver.sh --member 1 --download --skip-fetch
+```
+
+### Flags
+
+| flag | required | purpose |
+|---|---|---|
+| `--member <1-5>` | yes | picks the pre-assigned accession list for that member |
+| `--accessions A,B,C` | no | override with a custom comma-separated accession subset |
+| `--download` | no | also pull FASTQ files + build local samplesheet + launch nextflow (without this the driver stops after fetching manifest/URL samplesheet) |
+| `--skip-fetch` | no | skip steps 3–4, go directly to `nextflow run -resume`. Requires `raw/encode_results/nfcore_chipseq_samplesheet.local.csv` to already exist |
+
+### Execution order inside the driver
+
+1. **`init.sh`** — guarded by `.init_done` marker; runs only once.
+2. **`conda activate encodefetch`** — loaded from `/apps/local/anaconda3`.
+3. **Unrename pass** — renames any `*.fastq.gz` back to `*.fastq` so encodefetch's built-in skip-existing check works on re-runs (encodefetch keys on the `.fastq` suffix; `make_nfcode_samplesheet.py` later renames them back to `.gz`).
+4. **`fetch_member_accessions.sh`** — runs encodefetch for the selected accessions.
+5. **Gate** — if `--download` was not given, the driver exits here.
+6. **`make_nfcode_samplesheet.py`** — renames `.fastq` → `.fastq.gz`, rewrites URL samplesheet with local paths into `nfcore_chipseq_samplesheet.local.csv`, sanitises/dedupes rows.
+7. **`nextflow run nf-core/chipseq -r 2.1.0 -resume`** — with SLURM executor; child sbatch jobs dispatched per `nfcore_chipseq.config`.
+
+### Logs
+
+Each step writes to its own timestamped file under `logs/`:
+
+```
+logs/
+├── driver/        driver-<jobname>-<jobid>.log|err   (SLURM's -o/-e)
+├── init/          init-<TS>.log
+├── fetch/         fetch-member<N>-<TS>.log
+├── samplesheet/   samplesheet-<TS>.log
+├── nextflow/      .nextflow.log (+ rotated .log.1, .log.2, ...)
+└── reports/       nfcore_trace.txt, nfcore_report.html, nfcore_timeline.html, nfcore_dag.png
+```
+
+### Re-run / resume behavior
+
+- Safe to re-submit with the exact same args — `init.sh` skips, encodefetch skips already-downloaded files, `make_nfcode_samplesheet.py` is idempotent, Nextflow `-resume` reuses task cache from `workDir`.
+- To force re-init: `rm .init_done`.
+- To force a clean nextflow run: `rm -rf .nextflow/` (leaves `workDir/` cached tasks intact; those get re-hashed on next run).
+- To wipe Nextflow task cache: `rm -rf <workDir>` (path in `nfcore_chipseq.config`).
+
+### Cancelling
+
+```bash
+scancel <driver-jobid>                                # kills driver; Nextflow's shutdown hook scancels children
+squeue -u $USER -h -o '%A' | xargs -r scancel         # nuclear: kill every job you own
+```
+
+---
+
 ## Setup
 
 ### Create and activate Conda environment

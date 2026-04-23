@@ -1,5 +1,29 @@
-raw/encode_results/files/*
-ref/*
-.nextflow*/*
-out/*
-logs/*
+# ── Pipeline data & outputs ────────────────────────────────────────────────
+raw/encode_results/files/
+ref/
+out/
+nf_work/
+logs/
+
+# ── Nextflow state ─────────────────────────────────────────────────────────
+.nextflow/
+.nextflow.log*
+
+# ── Driver markers ─────────────────────────────────────────────────────────
+.init_done
+
+# ── Editor / OS junk ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# ── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
