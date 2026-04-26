@@ -48,8 +48,11 @@ DOWNLOAD=false
 SKIP_FETCH=false
 
 usage() {
-  echo "Usage: sbatch $(basename "$0") --member <1-5> \\"
+  echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
   echo "         [--accessions ACC1,ACC2,...] [--download] [--skip-fetch]"
+  echo ""
+  echo "  Omitting --member (or passing --member all) fetches the union of all"
+  echo "  five member files = the full 913-accession dataset."
   exit 1
 }
 
@@ -64,7 +67,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -z "$MEMBER" ]] && { echo "ERROR: --member is required"; usage; }
+# Default: no --member means run on the full dataset (union of all 5 members).
+[[ -z "$MEMBER" ]] && MEMBER="all"
 
 # ── project layout ────────────────────────────────────────────────────────────
 # Under sbatch, SLURM copies this script to a staging dir on the compute node,
@@ -78,7 +82,7 @@ TS="$(date +%Y%m%d-%H%M%S)"
 mkdir -p logs/init logs/fetch logs/samplesheet logs/driver logs/nextflow logs/reports
 
 INIT_LOG="logs/init/init-${TS}.log"
-FETCH_LOG="logs/fetch/fetch-member${MEMBER}-${TS}.log"
+FETCH_LOG="logs/fetch/fetch-${MEMBER}-${TS}.log"
 SAMPLESHEET_LOG="logs/samplesheet/samplesheet-${TS}.log"
 
 echo "[$(date)] === driver start ==="
@@ -158,7 +162,11 @@ fi
 
 # ── 5. nextflow run ───────────────────────────────────────────────────────────
 CONFIG="nfcore_chipseq.config"
-OUTDIR="out/member${MEMBER}"
+if [[ "$MEMBER" == "all" ]]; then
+  OUTDIR="out/all"
+else
+  OUTDIR="out/member${MEMBER}"
+fi
 
 [[ -f "$CONFIG" ]] || { echo "ERROR: missing $CONFIG"; exit 1; }
 
