@@ -20,8 +20,10 @@ Thumbs.db
 *.swp
 *.swo
 *~
+CLAUDE.md
 .vscode/
 .idea/
+
 
 # ── Python ─────────────────────────────────────────────────────────────────
 __pycache__/
