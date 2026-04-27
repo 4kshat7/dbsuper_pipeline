@@ -31,8 +31,9 @@
 
 #SBATCH --job-name=nf-chipseq
 #SBATCH --partition=cpu
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=8G
+#SBATCH --account=$USER
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=48G
 #SBATCH --time=7-00:00:00
 #SBATCH -o logs/driver/driver-%x-%j.log
 #SBATCH -e logs/driver/driver-%x-%j.err
@@ -105,8 +106,8 @@ fi
 echo "[$(date)] activating micromamba env 'dbsuper_pipeline'"
 set +u
 export MAMBA_ROOT_PREFIX="/storage/software/micromamba"
-eval "$(/storage/software/micromamba/bin/micromamba shell hook --shell bash)" \
-  || { echo "Could not init micromamba; check /storage/software/micromamba/bin/micromamba"; exit 1; }
+eval "$(/usr/local/bin/micromamba shell hook --shell bash)" \
+  || { echo "Could not init micromamba; check /usr/local/bin/micromamba"; exit 1; }
 micromamba activate dbsuper_pipeline
 set -u
 
