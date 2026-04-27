@@ -111,7 +111,7 @@ echo "    --target-label H3K27ac \\"
 echo "    --organism \"Homo sapiens\" \\"
 echo "    --file-type fastq \\"
 echo "    --status released \\"
-echo "    --threads 20 \\"
+echo "    --threads 10 \\"
 echo "    --progress \\"
 echo "    --nfcore ${DOWNLOAD_FLAG}"
 echo ""
@@ -124,7 +124,7 @@ encodefetch \
   --organism "Homo sapiens" \
   --file-type fastq \
   --status released \
-  --threads 20 \
+  --threads 10 \
   --progress \
   --nfcore \
   ${DOWNLOAD_FLAG}

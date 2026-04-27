@@ -1,6 +1,6 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------
-# SLURM driver for the dbsuper_pipeline (member4 variant).
+# SLURM driver for the dbsuper_pipeline.
 #
 # Pipeline order inside the driver:
 #   1. init.sh                                (once, if not already done)
@@ -29,15 +29,13 @@
 #     make_nfcode_samplesheet.py renames them back to .fastq.gz afterwards.
 # ------------------------------------------------------------------------------
 
-#SBATCH -J nf-chipseq-m4
-#SBATCH -p cscc-cpu-p
-#SBATCH --qos=cscc-cpu-qos
+#SBATCH --job-name=nf-chipseq
+#SBATCH --partition=cpu
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
-#SBATCH --time=3-00:00:00
+#SBATCH --time=7-00:00:00
 #SBATCH -o logs/driver/driver-%x-%j.log
 #SBATCH -e logs/driver/driver-%x-%j.err
-#SBATCH --nodelist=cn-08
 
 set -euo pipefail
 
@@ -101,15 +99,15 @@ else
   touch .init_done
 fi
 
-# ── 2. conda activate encodefetch ─────────────────────────────────────────────
-# CIAI cluster: conda at /apps/local/anaconda3. Disable -u around activation
-# because the openjdk activate hook reads $JAVA_HOME before setting it.
-echo "[$(date)] activating conda env 'encodefetch'"
+# ── 2. activate dbsuper_pipeline environment ──────────────────────────────────
+# Karakoram uses micromamba (root: /storage/software/micromamba). Disable -u
+# around activation because the openjdk hook reads $JAVA_HOME before setting it.
+echo "[$(date)] activating micromamba env 'dbsuper_pipeline'"
 set +u
-source /apps/local/conda_init.sh 2>/dev/null \
-  || source /apps/local/anaconda3/etc/profile.d/conda.sh 2>/dev/null \
-  || { echo "Could not find conda init; adjust path."; exit 1; }
-conda activate encodefetch
+export MAMBA_ROOT_PREFIX="/storage/software/micromamba"
+eval "$(/storage/software/micromamba/bin/micromamba shell hook --shell bash)" \
+  || { echo "Could not init micromamba; check /storage/software/micromamba/bin/micromamba"; exit 1; }
+micromamba activate dbsuper_pipeline
 set -u
 
 SAMPLESHEET="raw/encode_results/nfcore_chipseq_samplesheet.local.csv"
