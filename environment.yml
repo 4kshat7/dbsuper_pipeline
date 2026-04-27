@@ -10,3 +10,5 @@ dependencies:
   - graphviz
   - openjdk>=17,<26
   - nextflow
+  - pip:
+      - git+https://github.com/khan-lab/ENCODEfetch.git@main
