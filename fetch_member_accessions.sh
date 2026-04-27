@@ -14,6 +14,7 @@ set -euo pipefail
 MEMBER=""
 CUSTOM_ACCESSIONS=""
 DOWNLOAD=false
+SAMPLESHEET_NAME="nfcore_chipseq_samplesheet.csv"
 
 # ── arg parsing ───────────────────────────────────────────────────────────────
 usage() {
@@ -22,6 +23,8 @@ usage() {
   echo "  --member       Required. Your assigned member number (1-5)."
   echo "  --accessions   Optional. Override with a specific comma-separated accession list."
   echo "  --download     Optional. Also download the FASTQ files (omit for manifest-only)."
+  echo "  --samplesheet-name Optional. Rename generated nf-core samplesheet to this CSV name."
+  echo "                     Default: nfcore_chipseq_samplesheet.csv"
   exit 1
 }
 
@@ -30,6 +33,7 @@ while [[ $# -gt 0 ]]; do
     --member)      MEMBER="$2";            shift 2 ;;
     --accessions)  CUSTOM_ACCESSIONS="$2"; shift 2 ;;
     --download)    DOWNLOAD=true;          shift   ;;
+    --samplesheet-name) SAMPLESHEET_NAME="$2"; shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -77,6 +81,7 @@ if $DOWNLOAD; then
 else
   echo "Mode: fetch manifest + samplesheet only  (re-run with --download to also pull FASTQ files)"
 fi
+echo "Samplesheet output name: ${SAMPLESHEET_NAME}"
 echo ""
 
 # ── run from the raw/ directory ────────────────────────────────────────────────
@@ -112,3 +117,31 @@ encodefetch \
   --progress \
   --nfcore \
   ${DOWNLOAD_FLAG}
+
+if [[ -n "$SAMPLESHEET_NAME" ]]; then
+  if [[ "$SAMPLESHEET_NAME" == */* ]]; then
+    DEST_SHEET="$SAMPLESHEET_NAME"
+  else
+    DEST_SHEET="encode_results/$SAMPLESHEET_NAME"
+  fi
+
+  # ENCODEfetch naming can vary by assay/version, so pick newest nf-core samplesheet.
+  # Exclude destination path to avoid trying to move a file onto itself.
+  mapfile -t NFCORE_SHEETS < <(ls -1t encode_results/nfcore*_samplesheet.csv 2>/dev/null | grep -Fxv "$DEST_SHEET" || true)
+
+  if [[ ${#NFCORE_SHEETS[@]} -eq 0 ]]; then
+    if [[ -f "$DEST_SHEET" ]]; then
+      echo "Samplesheet already saved as: $DEST_SHEET"
+      exit 0
+    fi
+    echo "WARNING: no nf-core samplesheet was found in raw/encode_results/."
+    echo "         Looked for: raw/encode_results/nfcore*_samplesheet.csv"
+    exit 1
+  fi
+
+  SRC_SHEET="${NFCORE_SHEETS[0]}"
+
+  mkdir -p "$(dirname "$DEST_SHEET")"
+  mv -f "$SRC_SHEET" "$DEST_SHEET"
+  echo "Renamed samplesheet: $SRC_SHEET -> $DEST_SHEET"
+fi
