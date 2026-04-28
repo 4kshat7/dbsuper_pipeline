@@ -18,9 +18,10 @@ SAMPLESHEET_NAME="nfcore_chipseq_samplesheet.csv"
 
 # ── arg parsing ───────────────────────────────────────────────────────────────
 usage() {
-  echo "Usage: bash $(basename "$0") --member <1-5> [--accessions ACC1,ACC2,...] [--download]"
+  echo "Usage: bash $(basename "$0") [--member <1-5|all>] [--accessions ACC1,ACC2,...] [--download]"
   echo ""
-  echo "  --member       Required. Your assigned member number (1-5)."
+  echo "  --member       Optional. 1-5 to fetch one member's slice; 'all' or omitted"
+  echo "                 to fetch the union of all 5 members (~913 accessions)."
   echo "  --accessions   Optional. Override with a specific comma-separated accession list."
   echo "  --download     Optional. Also download the FASTQ files (omit for manifest-only)."
   echo "  --samplesheet-name Optional. Rename generated nf-core samplesheet to this CSV name."
@@ -39,10 +40,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -z "$MEMBER" ]]; then
-  echo "ERROR: --member is required."
-  usage
-fi
+[[ -z "$MEMBER" ]] && MEMBER="all"
 
 # Resolve script-relative paths (used for member list + later cd into raw/).
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -52,27 +50,41 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # tools/compute_member_split.py, which keeps each member's ChIP assignments
 # as-is and aligns the controls so every ChIP's matched controls live in the
 # same member's file (no orphan controls, no missing controls).
-if ! [[ "$MEMBER" =~ ^[1-5]$ ]]; then
-  echo "ERROR: --member must be 1-5."
+if ! [[ "$MEMBER" =~ ^([1-5]|all)$ ]]; then
+  echo "ERROR: --member must be 1-5 or 'all'."
   usage
 fi
 
-MEMBER_FILE="${SCRIPT_DIR}/members/member${MEMBER}.txt"
-[[ -f "$MEMBER_FILE" ]] || {
-  echo "ERROR: $MEMBER_FILE not found."
-  echo "       Run: python3 ${SCRIPT_DIR}/tools/compute_member_split.py"
-  exit 1
-}
-
-ACCESSIONS=$(paste -sd, "$MEMBER_FILE")
-COUNT=$(grep -c '^ENCSR' "$MEMBER_FILE")
+# MEMBER == "all" → no --accessions filter; encodefetch's search filters
+# (assay-title + target-label + organism) match every released H3K27ac
+# Histone ChIP-seq, which is the full ~913-experiment dataset.
+ACCESSIONS=""
+if [[ "$MEMBER" != "all" ]]; then
+  MEMBER_FILE="${SCRIPT_DIR}/members/member${MEMBER}.txt"
+  [[ -f "$MEMBER_FILE" ]] || {
+    echo "ERROR: $MEMBER_FILE not found."
+    echo "       Run: python3 ${SCRIPT_DIR}/tools/compute_member_split.py"
+    exit 1
+  }
+  ACCESSIONS="$MEMBER_FILE"
+fi
 
 # override with custom accessions if provided
 if [[ -n "$CUSTOM_ACCESSIONS" ]]; then
-  ACCESSIONS="$CUSTOM_ACCESSIONS"
+  # write to temp file so the string length never hits ENAMETOOLONG in encodefetch
+  ACCESSIONS_TMP=$(mktemp /tmp/encodefetch_acc_XXXXXX.txt)
+  trap 'rm -f "$ACCESSIONS_TMP"' EXIT
+  echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' > "$ACCESSIONS_TMP"
+  ACCESSIONS="$ACCESSIONS_TMP"
+fi
+
+if [[ -z "$ACCESSIONS" ]]; then
+  echo "Member ${MEMBER}: no --accessions filter (full released H3K27ac dataset)"
+elif [[ -n "$CUSTOM_ACCESSIONS" ]]; then
   COUNT=$(echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' | wc -l)
   echo "Member ${MEMBER}: using custom accession list (${COUNT} accessions)"
 else
+  COUNT=$(grep -c '^ENCSR' "$ACCESSIONS")
   echo "Member ${MEMBER}: using pre-assigned accession list (${COUNT} accessions)"
 fi
 
@@ -92,9 +104,14 @@ if $DOWNLOAD; then
   DOWNLOAD_FLAG="--download"
 fi
 
+ACCESSIONS_FLAG=()
+if [[ -n "$ACCESSIONS" ]]; then
+  ACCESSIONS_FLAG=(--accessions "$ACCESSIONS")
+fi
+
 echo "Running command:"
 echo "  encodefetch \\"
-echo "    --accessions \"${ACCESSIONS}\" \\"
+[[ -n "$ACCESSIONS" ]] && echo "    --accessions \"${ACCESSIONS}\" \\"
 echo "    --assay-title \"Histone ChIP-seq\" \\"
 echo "    --target-label H3K27ac \\"
 echo "    --organism \"Homo sapiens\" \\"
@@ -107,7 +124,7 @@ echo ""
 echo "Please wait while it runs in the background..."
 
 encodefetch \
-  --accessions "${ACCESSIONS}" \
+  "${ACCESSIONS_FLAG[@]}" \
   --assay-title "Histone ChIP-seq" \
   --target-label H3K27ac \
   --organism "Homo sapiens" \
