@@ -67,12 +67,16 @@ if [[ "$MEMBER" != "all" ]]; then
     echo "       Run: python3 ${SCRIPT_DIR}/tools/compute_member_split.py"
     exit 1
   }
-  ACCESSIONS=$(paste -sd, "$MEMBER_FILE")
+  ACCESSIONS="$MEMBER_FILE"
 fi
 
 # override with custom accessions if provided
 if [[ -n "$CUSTOM_ACCESSIONS" ]]; then
-  ACCESSIONS="$CUSTOM_ACCESSIONS"
+  # write to temp file so the string length never hits ENAMETOOLONG in encodefetch
+  ACCESSIONS_TMP=$(mktemp /tmp/encodefetch_acc_XXXXXX.txt)
+  trap 'rm -f "$ACCESSIONS_TMP"' EXIT
+  echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' > "$ACCESSIONS_TMP"
+  ACCESSIONS="$ACCESSIONS_TMP"
 fi
 
 if [[ -z "$ACCESSIONS" ]]; then
