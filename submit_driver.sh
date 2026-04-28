@@ -182,7 +182,6 @@ nextflow -log logs/nextflow/.nextflow.log \
   --input   "$SAMPLESHEET" \
   --outdir  "$OUTDIR" \
   --genome  GRCh38 \
-  --read_length 50 \
   --narrow_peak
 
 echo "[$(date)] driver exit status: $?"
