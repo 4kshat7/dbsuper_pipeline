@@ -173,12 +173,18 @@ def build_encff_index_by_scanning(files_root: Path) -> dict:
     return index
 
 
-def make_local_samplesheet(url_sheet: Path, files_root: Path, out_local: Path, manifest_tsv: Optional[Path]) -> pd.DataFrame:
+def make_local_samplesheet(
+    url_sheet: Path, files_root: Path, out_local: Path, manifest_tsv: Optional[Path]
+) -> tuple:
     """
     Read ENCODEfetch nf-core samplesheet (URL-based) and replace fastq_1/fastq_2 URLs
     with local paths found under files_root (prefer manifest.tsv mapping).
+
+    Returns (df, failed_records) where failed_records is a list of dicts describing
+    every URL that could not be resolved to a local file.
     """
     df = pd.read_csv(url_sheet)
+    df_orig = df.copy()  # keep original URLs for failure reporting
 
     encff_index = {}
     if manifest_tsv and manifest_tsv.exists():
@@ -214,9 +220,36 @@ def make_local_samplesheet(url_sheet: Path, files_root: Path, out_local: Path, m
         if col in df.columns:
             df[col] = df[col].fillna("").map(map_fastq)
 
+    # Collect failed lookups: original URL was non-empty but mapped result is empty
+    failed_records = []
+    for col in ("fastq_1", "fastq_2"):
+        if col not in df.columns:
+            continue
+        orig_nonempty = df_orig[col].fillna("").astype(str).str.strip()
+        orig_nonempty = orig_nonempty.ne("") & orig_nonempty.ne("nan")
+        now_empty = df[col].fillna("").astype(str).str.strip().eq("")
+        for idx in df.index[orig_nonempty & now_empty]:
+            orig_url = str(df_orig.loc[idx, col])
+            try:
+                acc = url_to_encff(orig_url)
+            except ValueError:
+                acc = ""
+            failed_records.append({
+                "sample": df_orig.loc[idx, "sample"],
+                "replicate": df_orig.loc[idx, "replicate"],
+                "column": col,
+                "accession": acc,
+                "original_url": orig_url,
+                "reason": (
+                    f"file_not_found: local path could not be resolved for {acc}"
+                    if acc else
+                    "file_not_found: URL could not be mapped to a local file"
+                ),
+            })
+
     df.to_csv(out_local, index=False)
     print(f"[INFO] Wrote local-path samplesheet: {out_local}")
-    return df
+    return df, failed_records
 
 
 def convert_to_nfcore_v2_1_0(df: pd.DataFrame, out_v2: Path) -> pd.DataFrame:
@@ -272,7 +305,7 @@ def fix_control_replicates(df: pd.DataFrame, out_fixed: Path) -> pd.DataFrame:
     return df
 
 
-def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
+def sanitize_pairings(df: pd.DataFrame) -> tuple:
     """
     Clean ChIP/control pairings in an nf-core/chipseq v2.1.0 samplesheet.
 
@@ -286,10 +319,11 @@ def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
       3. Control-style rows (antibody blank) that no ChIP row references are
          dropped. Leaving them wastes alignment compute with no downstream use.
 
-    Prints a before/after summary. Returns the cleaned dataframe.
+    Returns (cleaned_df, drop_records).
     """
     df = df.copy()
     n0 = len(df)
+    drop_records = []
 
     def _pick_first(v):
         s = str(v).strip()
@@ -311,6 +345,13 @@ def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
     drop_chip_mask = chip_mask & ~ctrl_valid
     n_drop_chip_rows = int(drop_chip_mask.sum())
     n_drop_chip_samples = int(df.loc[drop_chip_mask, "sample"].nunique())
+    for _, row in df.loc[drop_chip_mask].iterrows():
+        ctrl = str(row.get("control", "")).strip()
+        drop_records.append({
+            "sample": row["sample"], "replicate": row["replicate"],
+            "column": "", "accession": "", "original_url": "",
+            "reason": f"orphan_chip: control '{ctrl}' not found in samplesheet after FASTQ drops",
+        })
     df = df.loc[~drop_chip_mask].copy()
 
     chip_mask = _chip_mask(df)
@@ -319,6 +360,12 @@ def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
     unused_ctrl_mask = ctrl_mask & ~df["sample"].astype(str).isin(referenced)
     n_drop_ctrl_rows = int(unused_ctrl_mask.sum())
     n_drop_ctrl_samples = int(df.loc[unused_ctrl_mask, "sample"].nunique())
+    for _, row in df.loc[unused_ctrl_mask].iterrows():
+        drop_records.append({
+            "sample": row["sample"], "replicate": row["replicate"],
+            "column": "", "accession": "", "original_url": "",
+            "reason": "unused_control: no ChIP row references this control sample",
+        })
     df = df.loc[~unused_ctrl_mask].copy()
 
     print("[SANITIZE] Pairing cleanup:")
@@ -329,22 +376,16 @@ def sanitize_pairings(df: pd.DataFrame) -> pd.DataFrame:
           f"({n_drop_ctrl_samples} unique control samples)")
     print(f"  rows before -> after                 : {n0} -> {len(df)}")
 
-    return df.reset_index(drop=True)
+    return df.reset_index(drop=True), drop_records
 
 
-def drop_missing_fastqs(df: pd.DataFrame) -> pd.DataFrame:
+def drop_missing_fastqs(df: pd.DataFrame) -> tuple:
     """
-    Drop rows whose FASTQ didn't resolve to a local file.
+    Drop rows whose fastq_1 didn't resolve to a local file (blank after URL→path mapping).
+    Rows with a blank fastq_2 (single-end) are kept regardless of what other rows in the
+    same sample look like — mixed single/paired replicates are left for the user to handle.
 
-    make_local_samplesheet() replaces each URL with the local path on disk,
-    but when a file wasn't downloaded (permission error, network failure,
-    still-in-flight) the URL becomes an empty string. nf-core/chipseq schema
-    requires a non-empty fastq_1, so such rows must be dropped.
-
-    Also drops broken paired-end rows: if any row of a sample has a non-empty
-    fastq_2 (→ sample is paired-end), then every row of that sample needs its
-    fastq_2 populated. A missing fastq_2 in a paired-end sample silently turns
-    into single-end mid-sample, which nf-core rejects.
+    Returns (cleaned_df, dropped_df) so callers can log the dropped rows.
     """
     df = df.copy()
     n0 = len(df)
@@ -356,26 +397,16 @@ def drop_missing_fastqs(df: pd.DataFrame) -> pd.DataFrame:
         return s in ("", "nan", "NaN", "None")
 
     fq1_blank = df["fastq_1"].apply(_blank)
-    fq2_blank = df["fastq_2"].apply(_blank)
-
-    # Samples with at least one non-blank fastq_2 are paired-end; every row of
-    # such a sample must have both fastqs.
-    paired_samples = set(df.loc[~fq2_blank, "sample"].astype(str))
-    broken_paired = df["sample"].astype(str).isin(paired_samples) & fq2_blank
-
-    drop_mask = fq1_blank | broken_paired
-    dropped = df[drop_mask]
-    df = df[~drop_mask].copy()
+    dropped = df[fq1_blank].copy()
+    df = df[~fq1_blank].copy()
 
     n_fq1 = int(fq1_blank.sum())
-    n_pe_broken = int((broken_paired & ~fq1_blank).sum())
     affected = dropped["sample"].astype(str).unique()
     kept_samples = set(df["sample"].astype(str))
     fully_dropped = [s for s in affected if s not in kept_samples]
 
     print("[DROP-MISSING-FASTQ] Rows whose local FASTQ path was not found:")
     print(f"  rows dropped (blank fastq_1)         : {n_fq1}")
-    print(f"  rows dropped (broken paired-end)     : {n_pe_broken}")
     print(f"  samples affected                     : {len(affected)}")
     print(f"    fully dropped (no replicates left) : {len(fully_dropped)}")
     print(f"    partially dropped (some reps kept) : {len(affected) - len(fully_dropped)}")
@@ -385,7 +416,67 @@ def drop_missing_fastqs(df: pd.DataFrame) -> pd.DataFrame:
         suffix = "..." if len(fully_dropped) > 10 else ""
         print(f"  fully-dropped samples: {shown}{suffix}")
 
-    return df.reset_index(drop=True)
+    return df.reset_index(drop=True), dropped.reset_index(drop=True)
+
+
+def handle_mixed_datatypes(df: pd.DataFrame) -> tuple:
+    """
+    Detect samples that have both single-end rows (blank fastq_2) and paired-end rows
+    (non-blank fastq_2) and split them into two separate sample IDs:
+      <sample>_se  — all single-end replicates
+      <sample>_pe  — all paired-end replicates
+
+    nf-core/chipseq v2.1.0 rejects any sample whose replicates mix datatypes.
+    Returns (df, records) where records describe every row that was renamed.
+    """
+    def _blank(v):
+        if pd.isna(v):
+            return True
+        return str(v).strip() in ("", "nan", "NaN", "None")
+
+    df = df.copy()
+    fq2_blank = df["fastq_2"].apply(_blank)
+
+    single_samples = set(df.loc[fq2_blank, "sample"].astype(str))
+    paired_samples = set(df.loc[~fq2_blank, "sample"].astype(str))
+    mixed_samples = sorted(single_samples & paired_samples)
+
+    records = []
+    if not mixed_samples:
+        print("[MIXED-TYPE] No mixed single/paired-end samples — no splits needed.")
+        return df, records
+
+    for sample in mixed_samples:
+        se_mask = (df["sample"].astype(str) == sample) & fq2_blank
+        pe_mask = (df["sample"].astype(str) == sample) & ~fq2_blank
+
+        for _, row in df.loc[se_mask].iterrows():
+            records.append({
+                "sample": sample, "replicate": row["replicate"],
+                "column": "", "accession": "", "original_url": "",
+                "reason": (
+                    f"nfcore_mixed_datatype: renamed to {sample}_se "
+                    f"(single-end rep in sample that also has paired-end replicates)"
+                ),
+            })
+        for _, row in df.loc[pe_mask].iterrows():
+            records.append({
+                "sample": sample, "replicate": row["replicate"],
+                "column": "", "accession": "", "original_url": "",
+                "reason": (
+                    f"nfcore_mixed_datatype: renamed to {sample}_pe "
+                    f"(paired-end rep in sample that also has single-end replicates)"
+                ),
+            })
+
+        df.loc[se_mask, "sample"] = f"{sample}_se"
+        df.loc[pe_mask, "sample"] = f"{sample}_pe"
+
+    print(f"[MIXED-TYPE] Split {len(mixed_samples)} mixed sample(s) into _se / _pe variants:")
+    for s in mixed_samples:
+        print(f"  {s}  ->  {s}_se  +  {s}_pe")
+
+    return df.reset_index(drop=True), records
 
 
 def renumber_replicates(df: pd.DataFrame) -> pd.DataFrame:
@@ -479,7 +570,7 @@ def renumber_replicates(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def drop_duplicate_rows(df: pd.DataFrame) -> pd.DataFrame:
+def drop_duplicate_rows(df: pd.DataFrame) -> tuple:
     """
     Remove rows nf-core/chipseq's check_samplesheet.py rejects as duplicates.
 
@@ -497,6 +588,8 @@ def drop_duplicate_rows(df: pd.DataFrame) -> pd.DataFrame:
     Fix: for control rows, normalize control and control_replicate to empty,
     then drop exact duplicates on the key tuple. ChIP rows are deduped on the
     full tuple too (same row literally listed twice = duplicate regardless).
+
+    Returns (cleaned_df, drop_records).
     """
     df = df.copy()
     n0 = len(df)
@@ -514,6 +607,16 @@ def drop_duplicate_rows(df: pd.DataFrame) -> pd.DataFrame:
     key_df = df[key_cols].astype(str).apply(lambda c: c.str.strip())
     dup_mask = key_df.duplicated(keep="first")
 
+    drop_records = []
+    for idx in df.index[dup_mask]:
+        row = df.loc[idx]
+        kind = "control" if ctrl_mask.loc[idx] else "ChIP"
+        drop_records.append({
+            "sample": row["sample"], "replicate": row["replicate"],
+            "column": "", "accession": "", "original_url": "",
+            "reason": f"duplicate_row: duplicate {kind} row removed (same sample/fastq/replicate)",
+        })
+
     n_dropped_ctrl = int((dup_mask & ctrl_mask).sum())
     n_dropped_chip = int((dup_mask & ~ctrl_mask).sum())
     df = df.loc[~dup_mask].copy()
@@ -523,7 +626,7 @@ def drop_duplicate_rows(df: pd.DataFrame) -> pd.DataFrame:
     print(f"  duplicate ChIP rows dropped    : {n_dropped_chip}")
     print(f"  rows before -> after           : {n0} -> {len(df)}")
 
-    return df.reset_index(drop=True)
+    return df.reset_index(drop=True), drop_records
 
 
 def main():
@@ -550,38 +653,65 @@ def main():
 
     rename_misnamed_fastqs(files_root)
 
-    # Create temporary local samplesheet with URLs replaced
     out_local = subset / "nfcore_chipseq_samplesheet.local.csv"
-    df_local = make_local_samplesheet(url_sheet, files_root, out_local, manifest_tsv if manifest_tsv.exists() else None)
+    out_failed = subset / "failed_files.csv"
 
-    # Convert to nf-core v2.1.0 format (removes single_end column)
+    # Replace ENCODE URLs with local paths; collect file-not-found failures.
+    df_local, all_records = make_local_samplesheet(
+        url_sheet, files_root, out_local, manifest_tsv if manifest_tsv.exists() else None
+    )
+
+    # Project to nf-core v2.1.0 schema (drop single_end column if present).
     df_v2 = df_local.copy()
     if "single_end" in df_v2.columns:
         df_v2 = df_v2.drop(columns=["single_end"])
-    
+
     required = ["sample", "fastq_1", "fastq_2", "replicate", "antibody", "control", "control_replicate"]
     missing = [c for c in required if c not in df_v2.columns]
     if missing:
         raise RuntimeError(f"Missing required columns for nf-core v2.1.0: {missing}")
     df_v2 = df_v2[required].copy()
 
-    # 1) Drop rows whose FASTQ didn't download (blank fastq_1 or broken paired).
-    #    Must run BEFORE sanitize_pairings so any control that loses all its
-    #    replicates cascades into ChIP-orphan detection below.
-    df_v2 = drop_missing_fastqs(df_v2)
+    # 1) Drop rows whose fastq_1 is blank (file not downloaded / not on disk).
+    #    Must run BEFORE sanitize_pairings so a control that loses all replicates
+    #    cascades into ChIP-orphan detection below.
+    df_v2, fq_dropped = drop_missing_fastqs(df_v2)
 
-    # 2) Clean ChIP/control pairings: comma-joined IDs, orphan ChIPs whose
-    #    control is no longer in the sheet, and control rows nothing references.
-    df_v2 = sanitize_pairings(df_v2)
+    # Catch edge case: fastq_1 was blank in the source sheet itself (no URL to fail).
+    already_logged = {(str(r["sample"]), str(r["replicate"]), r["column"]) for r in all_records}
+    for _, row in fq_dropped.iterrows():
+        key = (str(row["sample"]), str(row["replicate"]), "fastq_1")
+        if key not in already_logged:
+            all_records.append({
+                "sample": row["sample"], "replicate": row["replicate"],
+                "column": "fastq_1", "accession": "",
+                "original_url": "(blank in source samplesheet)",
+                "reason": "blank_fastq1_in_source: fastq_1 was blank in the source samplesheet",
+            })
+            already_logged.add(key)
 
-    # 3) Renumber replicates 1..N per sample and propagate to control_replicate.
-    #    Replaces the separate fix_samplesheet_replicates.py step.
+    # 2) Split samples that mix single-end and paired-end replicates into _se / _pe.
+    #    nf-core requires a uniform datatype per sample.
+    df_v2, mixed_records = handle_mixed_datatypes(df_v2)
+    all_records.extend(mixed_records)
+
+    # 3) Clean ChIP/control pairings: comma-joined IDs, orphan ChIPs, unused controls.
+    df_v2, sanitize_records = sanitize_pairings(df_v2)
+    all_records.extend(sanitize_records)
+
+    # 4) Renumber replicates 1..N per sample and propagate to control_replicate.
     df_v2 = renumber_replicates(df_v2)
 
-    # 4) Drop the duplicate control rows encodefetch emits (same fastq/sample
-    #    listed both as 'standalone control' and 'referenced by ChIP at rep N').
-    #    nf-core's check_samplesheet.py rejects these as duplicates.
-    df_v2 = drop_duplicate_rows(df_v2)
+    # 5) Drop exact duplicate rows that nf-core's check_samplesheet.py rejects.
+    df_v2, dedup_records = drop_duplicate_rows(df_v2)
+    all_records.extend(dedup_records)
+
+    # Write failed_files.csv — all modifications/drops with reasons, one row each.
+    if all_records:
+        pd.DataFrame(all_records).to_csv(out_failed, index=False)
+        print(f"[WARN] {len(all_records)} row(s) modified/dropped — details in {out_failed}")
+    elif out_failed.exists():
+        out_failed.unlink()  # remove stale file from a previous run
 
     # Overwrite .local.csv with the fully cleaned, pipeline-ready samplesheet.
     df_v2.to_csv(out_local, index=False)

@@ -87,9 +87,9 @@ def main():
               f"intended for URL-based input. Example: {not_url.iloc[0][:80]}")
 
     # Sanitization pipeline (no drop_missing_fastqs needed for URL mode)
-    df = sanitize_pairings(df)
+    df, _ = sanitize_pairings(df)
     df = renumber_replicates(df)
-    df = drop_duplicate_rows(df)
+    df, _ = drop_duplicate_rows(df)
 
     df.to_csv(out_path, index=False)
 
