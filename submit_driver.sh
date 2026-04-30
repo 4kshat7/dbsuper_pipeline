@@ -32,8 +32,8 @@
 #SBATCH --job-name=nf-chipseq
 #SBATCH --partition=cpu
 #SBATCH --account=$USER
-#SBATCH --cpus-per-task=10
-#SBATCH --mem=48G
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
 #SBATCH --time=7-00:00:00
 #SBATCH -o logs/driver/driver-%x-%j.log
 #SBATCH -e logs/driver/driver-%x-%j.err
