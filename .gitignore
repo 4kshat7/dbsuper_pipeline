@@ -4,7 +4,7 @@ ref/
 out/
 nf_work/
 # keep the logs/ directory tracked, but ignore everything inside it
-logs/*
+logs
 !logs/.gitkeep
 
 # ── Nextflow state ─────────────────────────────────────────────────────────

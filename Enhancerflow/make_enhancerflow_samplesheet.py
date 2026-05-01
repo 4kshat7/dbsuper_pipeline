@@ -97,6 +97,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--strict", action="store_true",
                    help="fail if any expected BAM/peak file is missing "
                         "(default: skip the row with a warning)")
+    p.add_argument("--min-peaks", type=int, default=1,
+                   help="drop rows whose peak file has fewer than N lines "
+                        "(default: 1 — i.e. skip empty peak files). ROSE2 "
+                        "fails with 'xmin not less than xmax' on empty input.")
     return p.parse_args()
 
 
@@ -164,6 +168,20 @@ def main() -> int:
             if missing_files:
                 msg = (f"[warn] {sample_rep}: missing files, skipping: "
                        + ", ".join(missing_files))
+                if args.strict:
+                    sys.exit("ERROR: " + msg)
+                print(msg, file=sys.stderr)
+                rows_skipped += 1
+                continue
+
+            # Empty / near-empty peak files crash ROSE2 in calculate_cutoff()
+            # because the signal vector ends up length 0 → optimize(lower=1,
+            # upper=0) fails with 'xmin not less than xmax'.
+            with peaks.open() as pf:
+                peak_count = sum(1 for _ in pf)
+            if peak_count < args.min_peaks:
+                msg = (f"[warn] {sample_rep}: only {peak_count} peaks "
+                       f"(< --min-peaks={args.min_peaks}), skipping")
                 if args.strict:
                     sys.exit("ERROR: " + msg)
                 print(msg, file=sys.stderr)
