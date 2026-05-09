@@ -100,9 +100,12 @@ echo ""
 # ── run from the raw/ directory ────────────────────────────────────────────────
 cd "${SCRIPT_DIR}/raw" || { echo "ERROR: could not cd into raw/"; exit 1; }
 
+# encodefetch >= 0.5.0 downloads by default; --metadata-only skips downloads
+# (the old --download flag no longer exists). So our $DOWNLOAD = false case
+# is the one that needs an extra flag now.
 DOWNLOAD_FLAG=""
-if $DOWNLOAD; then
-  DOWNLOAD_FLAG="--download"
+if ! $DOWNLOAD; then
+  DOWNLOAD_FLAG="--metadata-only"
 fi
 
 # When MEMBER=all (and no custom override), $ACCESSIONS is empty, so we omit

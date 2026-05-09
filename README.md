@@ -107,12 +107,16 @@ This creates: `out`, `raw`, `ref`,`logs` and `Enhancerflow` directories.
 
 ### Get manifest and samplesheet
 
-Adjust `--threads` based on your available CPUs. Make sure there are no trailing spaces after the backslashes:
+Adjust `--threads` based on your available CPUs. Note: encodefetch 0.5.0+
+downloads files by default — pass `--metadata-only` to fetch the manifest
+and samplesheet without pulling FASTQs:
 
 ```bash
 cd raw
-encodefetch --assay-title "Histone ChIP-seq" --target-label H3K27ac --organism "Homo sapiens" --file-type fastq --status released --threads 20 --progress --nfcore
+encodefetch --assay-title "Histone ChIP-seq" --target-label H3K27ac --organism "Homo sapiens" --file-type fastq --status released --threads 20 --progress --nfcore --metadata-only
 ```
+
+Drop `--metadata-only` to also download the FASTQs.
 
 ### Fetching your assigned accessions (split across 5 members)
 
