@@ -3,7 +3,7 @@
 # SLURM driver for Enhancerflow (super-enhancer calling on chipseq output).
 #
 # Pipeline order:
-#   1. activate micromamba env 'dbsuper_pipeline'
+#   1. module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0
 #   2. make_enhancerflow_samplesheet.py
 #        chipseq samplesheet + chipseq out/ → enhancerflow_samplesheet.csv
 #   3. nextflow run khan-lab/enhancerflow ...
@@ -87,13 +87,23 @@ echo "  samplesheet_out  : $SAMPLESHEET"
 echo "  skip-samplesheet : $SKIP_SAMPLESHEET"
 echo "  timestamp        : $TS"
 
-# ── 1. activate dbsuper_pipeline environment ──────────────────────────────────
-echo "[$(date)] activating micromamba env 'dbsuper_pipeline'"
+# ── 1. load environment modules ───────────────────────────────────────────────
+# Karakoram uses Lmod; sbatch jobs run in non-login shells where the `module`
+# function isn't defined, so source the init scripts explicitly. set +u around
+# the calls because Lmod's bash function reads unset variables.
+#
+#   apptainer/system   → singularity/apptainer container runtime
+#   nextflow/25.10.4   → Nextflow CLI + bundled OpenJDK 23
+#   encodefetch/0.5.0  → Python 3.11 with pandas (used by
+#                        make_enhancerflow_samplesheet.py)
+#
+# Load order matters: apptainer prepends /usr/bin to PATH (which would shadow
+# the encodefetch env's python3), so it must come BEFORE encodefetch.
+echo "[$(date)] loading environment modules"
 set +u
-export MAMBA_ROOT_PREFIX="/storage/software/micromamba"
-eval "$(/usr/local/bin/micromamba shell hook --shell bash)" \
-  || { echo "Could not init micromamba; check /usr/local/bin/micromamba"; exit 1; }
-micromamba activate dbsuper_pipeline
+source /etc/profile.d/lmod.sh
+source /etc/profile.d/modules.sh
+module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0
 set -u
 
 # ── 2. make_enhancerflow_samplesheet.py ──────────────────────────────────────
@@ -127,7 +137,7 @@ echo "  outdir      : out/"
 
 nextflow -log logs/nextflow/.nextflow.log \
   run khan-lab/enhancerflow -r main \
-  -profile singularity \
+  -profile apptainer \
   -c "$CONFIG" \
   -resume \
   --input          "$SAMPLESHEET" \

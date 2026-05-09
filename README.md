@@ -32,7 +32,7 @@ sbatch submit_driver.sh --member 1 --download --skip-fetch
 ### Execution order inside the driver
 
 1. **`init.sh`** — guarded by `.init_done` marker; runs only once.
-2. **`conda activate encodefetch`** — loaded from `/apps/local/anaconda3`.
+2. **`module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0`** — Lmod modules on Karakoram. `nextflow/25.10.4` bundles its own OpenJDK 23 and `encodefetch/0.5.0` bundles Python 3.11 with pandas (used by `make_nfcode_samplesheet.py`). `apptainer/system` must load first so its `/usr/bin` PATH entry doesn't shadow the encodefetch env's `python3`.
 3. **Unrename pass** — renames any `*.fastq.gz` back to `*.fastq` so encodefetch's built-in skip-existing check works on re-runs (encodefetch keys on the `.fastq` suffix; `make_nfcode_samplesheet.py` later renames them back to `.gz`).
 4. **`fetch_member_accessions.sh`** — runs encodefetch for the selected accessions.
 5. **Gate** — if `--download` was not given, the driver exits here.
@@ -71,12 +71,27 @@ squeue -u $USER -h -o '%A' | xargs -r scancel         # nuclear: kill every job 
 
 ## Setup
 
-### Create and activate Conda environment
+### Load required modules
+
+The pipeline uses Karakoram's Lmod modules instead of a project-specific conda
+env. `submit_driver.sh` does this automatically; for interactive shells:
 
 ```bash
-conda env create -f environment.yml -vvv
-conda activate dbsuper_pipeline
+module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0
 ```
+
+Module set:
+
+| Module | Provides |
+|---|---|
+| `apptainer/system` | singularity/apptainer container runtime |
+| `nextflow/25.10.4` | Nextflow CLI + bundled OpenJDK 23 |
+| `encodefetch/0.5.0` | `encodefetch` CLI + Python 3.11 with pandas |
+
+Load order matters — `apptainer/system` prepends `/usr/bin` to `PATH`, which
+would shadow the encodefetch env's `python3`. Load it first.
+
+The legacy `environment.yml` is kept for reference only.
 
 ### Initialize directory structure
 
@@ -324,7 +339,7 @@ The script automatically `cd`s into `raw/` before running and prints which mode 
 Modify the `nfcore_chipseq.config` file as needed, then run:
 
 ```bash
-nextflow run nf-core/chipseq -r 2.1.0 -profile singularity \
+nextflow run nf-core/chipseq -r 2.1.0 -profile apptainer \
   -c nfcore_chipseq.config \
   --input raw/encode_results/nfcore_chipseq_samplesheet.csv \
   --outdir out/nfcore_chipseq \
@@ -346,7 +361,7 @@ python3 make_nfcode_samplesheet.py
 ### Run nf-core/chipseq with local data
 
 ```bash
-nextflow run nf-core/chipseq -r 2.1.0 -profile singularity \
+nextflow run nf-core/chipseq -r 2.1.0 -profile apptainer \
   -c nfcore_chipseq.config \
   --igenomes_base /scratch/$USER/work/dbsuper_nf_new/ref/igenomes \
   --input raw/encode_results/nfcore_chipseq_samplesheet.local.csv \

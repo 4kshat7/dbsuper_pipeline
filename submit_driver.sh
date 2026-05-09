@@ -4,7 +4,7 @@
 #
 # Pipeline order inside the driver:
 #   1. init.sh                                (once, if not already done)
-#   2. conda activate encodefetch
+#   2. module load nextflow/25.10.4 encodefetch/0.5.0 apptainer/system
 #   3. fetch_member_accessions.sh             (manifest [+ optional FASTQ])
 #   4. make_nfcode_samplesheet.py             (only if --download was given)
 #   5. nextflow run nf-core/chipseq ...       (only if --download was given)
@@ -100,15 +100,25 @@ else
   touch .init_done
 fi
 
-# ── 2. activate dbsuper_pipeline environment ──────────────────────────────────
-# Karakoram uses micromamba (root: /storage/software/micromamba). Disable -u
-# around activation because the openjdk hook reads $JAVA_HOME before setting it.
-echo "[$(date)] activating micromamba env 'dbsuper_pipeline'"
+# ── 2. load environment modules ───────────────────────────────────────────────
+# Karakoram uses Lmod (modules under /storage/software/modules). The `module`
+# function isn't defined in non-login shells (sbatch jobs), so source the init
+# scripts explicitly. Disable -u around `module` because Lmod's bash function
+# reads unset variables internally.
+#
+#   apptainer/system   → singularity/apptainer runtime for nf-core containers
+#   nextflow/25.10.4   → Nextflow CLI + bundled OpenJDK 23 (matches old env)
+#   encodefetch/0.5.0  → encodefetch CLI + Python 3.11 with pandas (used by
+#                        make_nfcode_samplesheet.py)
+#
+# Load order matters: apptainer prepends /usr/bin to PATH (shadows env pythons),
+# so it must be loaded BEFORE encodefetch — otherwise `python3` resolves to
+# /usr/bin/python3 which lacks pandas.
+echo "[$(date)] loading environment modules"
 set +u
-export MAMBA_ROOT_PREFIX="/storage/software/micromamba"
-eval "$(/usr/local/bin/micromamba shell hook --shell bash)" \
-  || { echo "Could not init micromamba; check /usr/local/bin/micromamba"; exit 1; }
-micromamba activate dbsuper_pipeline
+source /etc/profile.d/lmod.sh
+source /etc/profile.d/modules.sh
+module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0
 set -u
 
 SAMPLESHEET="raw/encode_results/nfcore_chipseq_samplesheet.local.csv"
@@ -176,7 +186,7 @@ echo "  outdir      : $OUTDIR"
 
 nextflow -log logs/nextflow/.nextflow.log \
   run nf-core/chipseq -r 2.1.0 \
-  -profile singularity \
+  -profile apptainer \
   -c "$CONFIG" \
   -resume \
   --input   "$SAMPLESHEET" \
