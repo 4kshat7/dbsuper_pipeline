@@ -23,7 +23,9 @@ This creates: `out`, `raw`, `ref`,`logs` and `Enhancerflow` directories.
 
 ### Get manifest and samplesheet
 
-Adjust `--threads` based on your available CPUs. Make sure there are no trailing spaces after the backslashes:
+Adjust `--threads` based on your available CPUs. By default, encodefetch 0.5.0+
+downloads FASTQs. Use `--metadata-only` to fetch just the manifest and
+samplesheet without downloading files:
 
 ```bash
 cd raw
