@@ -31,3 +31,6 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+
+results_*/
+Enhancerflow/staging/
