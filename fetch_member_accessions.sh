@@ -124,6 +124,7 @@ echo "    --organism \"Homo sapiens\" \\"
 echo "    --file-type fastq \\"
 echo "    --status released \\"
 echo "    --threads 10 \\"
+echo "    --control-strategy pool \\"
 echo "    --progress \\"
 echo "    --nfcore ${DOWNLOAD_FLAG}"
 echo ""
@@ -137,6 +138,7 @@ encodefetch \
   --file-type fastq \
   --status released \
   --threads 10 \
+  --control-strategy pool \
   --progress \
   --nfcore \
   ${DOWNLOAD_FLAG}
