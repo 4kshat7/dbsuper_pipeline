@@ -136,7 +136,7 @@ echo "  enhancerflow rev: $ENHANCERFLOW_REV"
 
 nextflow -log logs/nextflow/.nextflow.log \
   run khan-lab/enhancerflow -r "$ENHANCERFLOW_REV" \
-  -profile singularity \
+  -profile apptainer \
   -c "$CONFIG" \
   -resume \
   --input          "$SAMPLESHEET" \
