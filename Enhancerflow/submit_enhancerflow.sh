@@ -142,7 +142,6 @@ nextflow -log logs/nextflow/.nextflow.log \
   --input          "$SAMPLESHEET" \
   --genome         hg38 \
   --outdir         out/ \
-  --skip_motifs \
   --skip_comparison
 
 echo "[$(date)] driver exit status: $?"
