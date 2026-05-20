@@ -134,6 +134,16 @@ echo "  outdir      : out/"
 ENHANCERFLOW_REV="2d7ec5f8106a69cde71d26796f25275299a8693f"  # khan-lab/enhancerflow main @ 2026-02-25
 echo "  enhancerflow rev: $ENHANCERFLOW_REV"
 
+# --genome hg38 is kept because HOMER's findMotifsGenome.pl uses the name as
+# its preset. --fasta overrides the iGenomes S3 URL (which compute nodes
+# can't reach) with the local hg38 FASTA that nf-core/chipseq already
+# published — same reference the staged BAMs were aligned to, so coordinates
+# match exactly. We deliberately do NOT pass --skip_motifs: motif analysis
+# (HOMER findMotifsGenome / annotatePeaks, FIMO, SEA) runs and tells us which
+# transcription factors are likely driving each super-enhancer.
+GENOME_FASTA="../out/member${MEMBER}/genome/genome.fa"
+[[ -f "$GENOME_FASTA" ]] || { echo "ERROR: genome FASTA not at $GENOME_FASTA"; exit 1; }
+
 nextflow -log logs/nextflow/.nextflow.log \
   run khan-lab/enhancerflow -r "$ENHANCERFLOW_REV" \
   -profile apptainer \
@@ -141,7 +151,9 @@ nextflow -log logs/nextflow/.nextflow.log \
   -resume \
   --input          "$SAMPLESHEET" \
   --genome         hg38 \
+  --fasta          "$GENOME_FASTA" \
   --outdir         out/ \
+  --skip_crc \
   --skip_comparison
 
 echo "[$(date)] driver exit status: $?"
