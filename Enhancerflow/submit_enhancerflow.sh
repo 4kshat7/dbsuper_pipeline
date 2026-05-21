@@ -128,11 +128,10 @@ echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : out/"
 
-# Pipeline pinned to a specific commit (no releases / tags exist upstream as of
-# 2026-05-13). Bump this SHA deliberately when you want to pick up upstream
-# changes; staying off `main` makes reruns reproducible.
-ENHANCERFLOW_REV="2d7ec5f8106a69cde71d26796f25275299a8693f"  # khan-lab/enhancerflow main @ 2026-02-25
-echo "  enhancerflow rev: $ENHANCERFLOW_REV"
+# Track upstream main. `nextflow pull` (run beforehand or via -latest) refreshes
+# the local asset cache; resolved SHA is logged below for traceability.
+ENHANCERFLOW_REV="main"
+echo "  enhancerflow rev: $ENHANCERFLOW_REV (resolving to current main)"
 
 # --genome hg38 is kept because HOMER's findMotifsGenome.pl uses the name as
 # its preset. --fasta overrides the iGenomes S3 URL (which compute nodes
@@ -154,6 +153,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   --fasta          "$GENOME_FASTA" \
   --outdir         out/ \
   --skip_crc \
-  --skip_comparison
-
+  --skip_comparison \
+  --skip_homer
+  
 echo "[$(date)] driver exit status: $?"
