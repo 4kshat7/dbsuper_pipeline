@@ -46,12 +46,35 @@ ACCESSIONS=""
 DOWNLOAD=false
 SKIP_FETCH=false
 
+# ── genome selection (EDIT HERE) ────────────────────────────────────────────
+# Which iGenomes build to align against, and its MACS2 effective genome size.
+# Override at submit time with --genome <key> (and optionally --macs-gsize N).
+# To support a new build, add a row to GSIZE_BY_GENOME below.
+#
+# gsize values are deepTools "effective genome size" (non-N bases) — the same
+# convention as the original GRCh38 value this config shipped with:
+#   https://deeptools.readthedocs.io/en/develop/content/feature/effectiveGenomeSize.html
+GENOME="mm10"                       # default: mouse (UCSC mm10 == Ensembl GRCm38)
+MACS_GSIZE=""                       # blank = auto-pick from GSIZE_BY_GENOME[$GENOME]
+declare -A GSIZE_BY_GENOME=(
+  [mm10]=2652783500                 # mouse — UCSC mm10 (== GRCm38)
+  [GRCm38]=2652783500               # mouse — Ensembl GRCm38
+  [GRCm37]=2620345972               # mouse — GRCm37 / mm9
+  [GRCh38]=2913022398               # human — GRCh38
+  [GRCh37]=2864785220               # human — GRCh37 / hg19
+)
+
 usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
-  echo "         [--accessions ACC1,ACC2,...] [--download] [--skip-fetch]"
+  echo "         [--accessions ACC1,ACC2,...] [--genome KEY] [--macs-gsize N] \\"
+  echo "         [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
+  echo ""
+  echo "  --genome      iGenomes build to align against (default: ${GENOME})."
+  echo "                Known keys: ${!GSIZE_BY_GENOME[*]}"
+  echo "  --macs-gsize  Override MACS2 effective genome size (default: auto from --genome)."
   exit 1
 }
 
@@ -59,6 +82,8 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --member)      MEMBER="$2";     shift 2 ;;
     --accessions)  ACCESSIONS="$2"; shift 2 ;;
+    --genome)      GENOME="$2";     shift 2 ;;
+    --macs-gsize)  MACS_GSIZE="$2"; shift 2 ;;
     --download)    DOWNLOAD=true;   shift   ;;
     --skip-fetch)  SKIP_FETCH=true; shift   ;;
     -h|--help)     usage ;;
@@ -68,6 +93,11 @@ done
 
 # Default: no --member means run on the full dataset (union of all 5 members).
 [[ -z "$MEMBER" ]] && MEMBER="all"
+
+# MACS2 effective genome size. Source of truth is params.macs_gsize in
+# nfcore_chipseq.config -- edit it there. The driver leaves it alone unless you
+# explicitly pass --macs-gsize N, in which case that value overrides the config.
+# (GSIZE_BY_GENOME above is kept as a reference table / set of valid --genome keys.)
 
 # ── project layout ────────────────────────────────────────────────────────────
 # Under sbatch, SLURM copies this script to a staging dir on the compute node,
@@ -88,6 +118,7 @@ echo "[$(date)] === driver start ==="
 echo "  project    : $PROJECT_ROOT"
 echo "  member     : $MEMBER"
 echo "  accessions : ${ACCESSIONS:-<default list for member ${MEMBER}>}"
+echo "  genome     : $GENOME (macs_gsize=${MACS_GSIZE:-from nfcore_chipseq.config})"
 echo "  download   : $DOWNLOAD"
 echo "  timestamp  : $TS"
 
@@ -183,15 +214,17 @@ echo "[$(date)] launching nf-core/chipseq"
 echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : $OUTDIR"
+echo "  genome      : $GENOME (macs_gsize=${MACS_GSIZE:-from nfcore_chipseq.config})"
 
 nextflow -log logs/nextflow/.nextflow.log \
   run nf-core/chipseq -r 2.1.0 \
   -profile apptainer \
   -c "$CONFIG" \
   -resume \
-  --input   "$SAMPLESHEET" \
-  --outdir  "$OUTDIR" \
-  --genome  GRCh38 \
+  --input      "$SAMPLESHEET" \
+  --outdir     "$OUTDIR" \
+  --genome     "$GENOME" \
+  ${MACS_GSIZE:+--macs_gsize "$MACS_GSIZE"} \
   --narrow_peak
 
 echo "[$(date)] driver exit status: $?"

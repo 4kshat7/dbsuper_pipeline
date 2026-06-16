@@ -14,7 +14,7 @@
 #        - generates enhancerflow_samplesheet.csv
 #
 # Run it like:
-#     sbatch submit_staging.sh                       # member4 (default)
+#     sbatch submit_staging.sh                       # all members (default)
 #     sbatch submit_staging.sh --member 1
 #     sbatch submit_staging.sh --skip-stage          # only regen samplesheet
 #     sbatch submit_staging.sh --dry-run             # preview without submitting
@@ -41,7 +41,7 @@
 set -euo pipefail
 
 # ── parse args ────────────────────────────────────────────────────────────────
-MEMBER="4"
+MEMBER="all"
 EXTRA_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -66,7 +66,11 @@ ENHANCERFLOW_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && p
 cd "$ENHANCERFLOW_DIR"
 
 CHIPSEQ_SAMPLESHEET="../raw/encode_results/nfcore_chipseq_samplesheet.local.csv"
-CHIPSEQ_OUTDIR="../out/member${MEMBER}"
+if [[ "$MEMBER" == "all" ]]; then
+  CHIPSEQ_OUTDIR="../out/all"
+else
+  CHIPSEQ_OUTDIR="../out/member${MEMBER}"
+fi
 STAGING_DIR="staging"
 LOGS_DIR="logs/staging"
 OUTPUT_SAMPLESHEET="enhancerflow_samplesheet.csv"

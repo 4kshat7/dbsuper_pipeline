@@ -15,15 +15,17 @@ MEMBER=""
 CUSTOM_ACCESSIONS=""
 DOWNLOAD=false
 SAMPLESHEET_NAME="nfcore_chipseq_samplesheet.csv"
+ORGANISM="Mus musculus"   # this is the mouse pipeline copy; override with --organism
 
 # ── arg parsing ───────────────────────────────────────────────────────────────
 usage() {
-  echo "Usage: bash $(basename "$0") [--member <1-5|all>] [--accessions ACC1,ACC2,...] [--download] [--samplesheet-name NAME.csv]"
+  echo "Usage: bash $(basename "$0") [--member <1-5|all>] [--accessions ACC1,ACC2,...] [--download] [--organism NAME] [--samplesheet-name NAME.csv]"
   echo ""
   echo "  --member       Optional. 1-5 to fetch one member's slice; 'all' or omitted"
-  echo "                 to fetch the union of all 5 members (~913 accessions)."
+  echo "                 to fetch the full released H3K27ac dataset for the organism."
   echo "  --accessions   Optional. Override with a specific comma-separated accession list."
   echo "  --download     Optional. Also download the FASTQ files (omit for manifest-only)."
+  echo "  --organism     Optional. Organism scientific name. Default: ${ORGANISM}"
   echo "  --samplesheet-name Optional. Rename generated nf-core samplesheet to this CSV name."
   echo "                     Default: nfcore_chipseq_samplesheet.csv"
   exit 1
@@ -33,6 +35,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --member)      MEMBER="$2";            shift 2 ;;
     --accessions)  CUSTOM_ACCESSIONS="$2"; shift 2 ;;
+    --organism)    ORGANISM="$2";          shift 2 ;;
     --download)    DOWNLOAD=true;          shift   ;;
     --samplesheet-name) SAMPLESHEET_NAME="$2"; shift 2 ;;
     -h|--help)     usage ;;
@@ -58,7 +61,7 @@ fi
 
 # MEMBER == "all" → no --accessions filter; encodefetch's search filters
 # (assay-title + target-label + organism) match every released H3K27ac
-# Histone ChIP-seq, which is the full ~913-experiment dataset.
+# Histone ChIP-seq for the chosen organism (full dataset).
 ACCESSIONS=""
 if [[ "$MEMBER" != "all" ]]; then
   MEMBER_FILE="${SCRIPT_DIR}/members/member${MEMBER}.txt"
@@ -72,17 +75,30 @@ fi
 
 # override with custom accessions if provided
 if [[ -n "$CUSTOM_ACCESSIONS" ]]; then
-  # write to temp file so the string length never hits ENAMETOOLONG in encodefetch
-  ACCESSIONS_TMP=$(mktemp /tmp/encodefetch_acc_XXXXXX.txt)
-  trap 'rm -f "$ACCESSIONS_TMP"' EXIT
-  echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' > "$ACCESSIONS_TMP"
-  ACCESSIONS="$ACCESSIONS_TMP"
+  if [[ -f "$CUSTOM_ACCESSIONS" ]]; then
+    # a file path (one accession per line). Resolve to an absolute path: the
+    # script cd's into raw/ before running encodefetch, so a relative path
+    # would no longer resolve and encodefetch would treat it as a literal
+    # accession string (→ 404).
+    ACCESSIONS="$(realpath "$CUSTOM_ACCESSIONS")"
+  else
+    # comma-separated string: write to temp file so the string length never
+    # hits ENAMETOOLONG in encodefetch
+    ACCESSIONS_TMP=$(mktemp /tmp/encodefetch_acc_XXXXXX.txt)
+    trap 'rm -f "$ACCESSIONS_TMP"' EXIT
+    echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' > "$ACCESSIONS_TMP"
+    ACCESSIONS="$ACCESSIONS_TMP"
+  fi
 fi
 
 if [[ -z "$ACCESSIONS" ]]; then
   echo "Member ${MEMBER}: no --accessions filter (full released H3K27ac dataset)"
 elif [[ -n "$CUSTOM_ACCESSIONS" ]]; then
-  COUNT=$(echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' | wc -l)
+  if [[ -f "$CUSTOM_ACCESSIONS" ]]; then
+    COUNT=$(grep -c '^ENCSR' "$CUSTOM_ACCESSIONS")
+  else
+    COUNT=$(echo "$CUSTOM_ACCESSIONS" | tr ',' '\n' | wc -l)
+  fi
   echo "Member ${MEMBER}: using custom accession list (${COUNT} accessions)"
 else
   COUNT=$(grep -c '^ENCSR' "$MEMBER_FILE")
@@ -120,7 +136,7 @@ echo "  encodefetch \\"
 [[ -n "$ACCESSIONS" ]] && echo "    --accessions \"${ACCESSIONS}\" \\"
 echo "    --assay-title \"Histone ChIP-seq\" \\"
 echo "    --target-label H3K27ac \\"
-echo "    --organism \"Homo sapiens\" \\"
+echo "    --organism \"${ORGANISM}\" \\"
 echo "    --file-type fastq \\"
 echo "    --status released \\"
 echo "    --threads 10 \\"
@@ -134,7 +150,7 @@ encodefetch \
   "${ACCESSIONS_FLAG[@]}" \
   --assay-title "Histone ChIP-seq" \
   --target-label H3K27ac \
-  --organism "Homo sapiens" \
+  --organism "$ORGANISM" \
   --file-type fastq \
   --status released \
   --threads 10 \

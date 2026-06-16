@@ -39,14 +39,16 @@
 set -euo pipefail
 
 # ── parse args ────────────────────────────────────────────────────────────────
-MEMBER="1"
+MEMBER="all"
 SKIP_SAMPLESHEET=false
+GENOME="mm10"
 
 usage() {
-  echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--skip-samplesheet]"
+  echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] [--skip-samplesheet]"
   echo ""
-  echo "  --member            which chipseq output to consume (default: 1)"
+  echo "  --member            which chipseq output to consume (default: all)"
   echo "                      maps to ../out/member<N> (or ../out/all)"
+  echo "  --genome            assembly passed to ROSE2 + rGREAT (default: mm10)"
   echo "  --skip-samplesheet  reuse the existing enhancerflow_samplesheet.csv"
   exit 1
 }
@@ -54,6 +56,7 @@ usage() {
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --member)            MEMBER="$2";       shift 2 ;;
+    --genome)            GENOME="$2";       shift 2 ;;
     --skip-samplesheet)  SKIP_SAMPLESHEET=true; shift ;;
     -h|--help)           usage ;;
     *) echo "Unknown option: $1"; usage ;;
@@ -82,6 +85,7 @@ SAMPLESHEET_LOG="logs/samplesheet/samplesheet-${MEMBER}-${TS}.log"
 echo "[$(date)] === enhancerflow driver start ==="
 echo "  enhancerflow_dir : $ENHANCERFLOW_DIR"
 echo "  member           : $MEMBER"
+echo "  genome           : $GENOME"
 echo "  chipseq_outdir   : $CHIPSEQ_OUTDIR"
 echo "  samplesheet_out  : $SAMPLESHEET"
 echo "  skip-samplesheet : $SKIP_SAMPLESHEET"
@@ -133,14 +137,17 @@ echo "  outdir      : out/"
 ENHANCERFLOW_REV="main"
 echo "  enhancerflow rev: $ENHANCERFLOW_REV (resolving to current main)"
 
-# --genome hg38 is kept because HOMER's findMotifsGenome.pl uses the name as
-# its preset. --fasta overrides the iGenomes S3 URL (which compute nodes
-# can't reach) with the local hg38 FASTA that nf-core/chipseq already
-# published — same reference the staged BAMs were aligned to, so coordinates
-# match exactly. We deliberately do NOT pass --skip_motifs: motif analysis
-# (HOMER findMotifsGenome / annotatePeaks, FIMO, SEA) runs and tells us which
-# transcription factors are likely driving each super-enhancer.
-GENOME_FASTA="../out/member${MEMBER}/genome/genome.fa"
+# --genome ($GENOME, default mm10) is the assembly name passed to ROSE2 (-g)
+# and (when enabled) rGREAT. --fasta overrides the iGenomes S3 URL (compute
+# nodes can't reach it) with the local FASTA that nf-core/chipseq published —
+# the same reference the staged BAMs were aligned to, so coordinates match.
+# Skips:
+#   --skip_homer  HOMER off (FIMO/SEA motif analysis still runs)
+#   --skip_great  GREAT off: the rgreat container ships only the human TxDb,
+#                 not TxDb.Mmusculus.UCSC.mm10.knownGene, so GREAT local mode
+#                 fails on mouse. Drop this flag once the container bundles the
+#                 mouse TxDb (+ org.Mm.eg.db).
+GENOME_FASTA="$CHIPSEQ_OUTDIR/genome/genome.fa"
 [[ -f "$GENOME_FASTA" ]] || { echo "ERROR: genome FASTA not at $GENOME_FASTA"; exit 1; }
 
 nextflow -log logs/nextflow/.nextflow.log \
@@ -149,11 +156,12 @@ nextflow -log logs/nextflow/.nextflow.log \
   -c "$CONFIG" \
   -resume \
   --input          "$SAMPLESHEET" \
-  --genome         hg38 \
+  --genome         "$GENOME" \
   --fasta          "$GENOME_FASTA" \
   --outdir         out/ \
   --skip_crc \
   --skip_comparison \
-  --skip_homer
+  --skip_homer \
+  # --skip_great
   
 echo "[$(date)] driver exit status: $?"
