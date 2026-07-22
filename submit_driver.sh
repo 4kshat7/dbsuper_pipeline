@@ -45,6 +45,9 @@ MEMBER=""
 ACCESSIONS=""
 DOWNLOAD=false
 SKIP_FETCH=false
+SAMPLESHEET_OVERRIDE=""              # override the hardcoded input samplesheet path
+OUTDIR_OVERRIDE=""                   # override the member-derived nextflow --outdir
+BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat local mm10 index)
 
 # ── genome selection (EDIT HERE) ────────────────────────────────────────────
 # Which iGenomes build to align against, and its MACS2 effective genome size.
@@ -67,6 +70,7 @@ declare -A GSIZE_BY_GENOME=(
 usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
   echo "         [--accessions ACC1,ACC2,...] [--genome KEY] [--macs-gsize N] \\"
+  echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
   echo "         [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
@@ -86,6 +90,9 @@ while [[ $# -gt 0 ]]; do
     --macs-gsize)  MACS_GSIZE="$2"; shift 2 ;;
     --download)    DOWNLOAD=true;   shift   ;;
     --skip-fetch)  SKIP_FETCH=true; shift   ;;
+    --samplesheet) SAMPLESHEET_OVERRIDE="$2"; shift 2 ;;
+    --outdir)      OUTDIR_OVERRIDE="$2";      shift 2 ;;
+    --bwa-index)   BWA_INDEX_OVERRIDE="$2";   shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -153,6 +160,7 @@ module load apptainer/system nextflow/25.10.4 encodefetch/0.5.0
 set -u
 
 SAMPLESHEET="raw/encode_results/nfcore_chipseq_samplesheet.local.csv"
+[[ -n "$SAMPLESHEET_OVERRIDE" ]] && SAMPLESHEET="$SAMPLESHEET_OVERRIDE"
 
 if $SKIP_FETCH; then
   echo "[$(date)] --skip-fetch given; skipping fetch + samplesheet steps."
@@ -207,6 +215,7 @@ if [[ "$MEMBER" == "all" ]]; then
 else
   OUTDIR="out/member${MEMBER}"
 fi
+[[ -n "$OUTDIR_OVERRIDE" ]] && OUTDIR="$OUTDIR_OVERRIDE"
 
 [[ -f "$CONFIG" ]] || { echo "ERROR: missing $CONFIG"; exit 1; }
 
@@ -215,7 +224,14 @@ echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : $OUTDIR"
 echo "  genome      : $GENOME (macs_gsize=${MACS_GSIZE:-from nfcore_chipseq.config})"
+echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 
+# --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
+# pipeline bug) and leave phantompeakqualtools nothing to read, which crashes it
+# and (since its errorStrategy isn't 'retry'-eligible) aborts the whole run. Its
+# NSC/RSC/correlation output feeds MultiQC only -- not MACS3 or anything
+# downstream -- so skipping it is safe; those samples still yield ~0 peaks and
+# get dropped later by make_enhancerflow_samplesheet.py's --min-peaks check.
 nextflow -log logs/nextflow/.nextflow.log \
   run nf-core/chipseq -r 2.1.0 \
   -profile apptainer \
@@ -225,6 +241,8 @@ nextflow -log logs/nextflow/.nextflow.log \
   --outdir     "$OUTDIR" \
   --genome     "$GENOME" \
   ${MACS_GSIZE:+--macs_gsize "$MACS_GSIZE"} \
-  --narrow_peak
+  ${BWA_INDEX_OVERRIDE:+--bwa_index "$BWA_INDEX_OVERRIDE"} \
+  --narrow_peak \
+  --skip_spp
 
 echo "[$(date)] driver exit status: $?"

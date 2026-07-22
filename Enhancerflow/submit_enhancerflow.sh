@@ -42,14 +42,24 @@ set -euo pipefail
 MEMBER="all"
 SKIP_SAMPLESHEET=false
 GENOME="mm10"
+CHIPSEQ_OUTDIR_OVERRIDE=""           # override chipseq out dir (e.g. ../out/human)
+STAGING_DIR_OVERRIDE=""              # override staging dir (e.g. staging_human)
+SAMPLESHEET_OVERRIDE=""              # override enhancerflow samplesheet name
+SKIP_GREAT=false                     # pass --skip_great (rgreat lacks the mouse TxDb)
 
 usage() {
-  echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] [--skip-samplesheet]"
+  echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] \\"
+  echo "         [--chipseq-outdir DIR] [--staging-dir DIR] [--samplesheet NAME] \\"
+  echo "         [--skip-great] [--skip-samplesheet]"
   echo ""
   echo "  --member            which chipseq output to consume (default: all)"
   echo "                      maps to ../out/member<N> (or ../out/all)"
   echo "  --genome            assembly passed to ROSE2 + rGREAT (default: mm10)"
-  echo "  --skip-samplesheet  reuse the existing enhancerflow_samplesheet.csv"
+  echo "  --chipseq-outdir    override chipseq out dir (e.g. ../out/human)"
+  echo "  --staging-dir       override staging dir (e.g. staging_human)"
+  echo "  --samplesheet       override enhancerflow samplesheet name"
+  echo "  --skip-great        pass --skip_great to enhancerflow (use for mouse)"
+  echo "  --skip-samplesheet  reuse the existing enhancerflow samplesheet"
   exit 1
 }
 
@@ -57,6 +67,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --member)            MEMBER="$2";       shift 2 ;;
     --genome)            GENOME="$2";       shift 2 ;;
+    --chipseq-outdir)    CHIPSEQ_OUTDIR_OVERRIDE="$2"; shift 2 ;;
+    --staging-dir)       STAGING_DIR_OVERRIDE="$2";    shift 2 ;;
+    --samplesheet)       SAMPLESHEET_OVERRIDE="$2";    shift 2 ;;
+    --skip-great)        SKIP_GREAT=true;   shift ;;
     --skip-samplesheet)  SKIP_SAMPLESHEET=true; shift ;;
     -h|--help)           usage ;;
     *) echo "Unknown option: $1"; usage ;;
@@ -76,6 +90,10 @@ else
 fi
 CHIPSEQ_SAMPLESHEET="../raw/encode_results/nfcore_chipseq_samplesheet.local.csv"
 SAMPLESHEET="enhancerflow_samplesheet.csv"
+
+# per-organism overrides (default = above, i.e. ENCODE behaviour unchanged)
+[[ -n "$CHIPSEQ_OUTDIR_OVERRIDE" ]] && CHIPSEQ_OUTDIR="$CHIPSEQ_OUTDIR_OVERRIDE"
+[[ -n "$SAMPLESHEET_OVERRIDE" ]]    && SAMPLESHEET="$SAMPLESHEET_OVERRIDE"
 
 TS="$(date +%Y%m%d-%H%M%S)"
 mkdir -p logs/driver logs/samplesheet logs/nextflow logs/reports out
@@ -105,6 +123,7 @@ set -u
 # produced upstream by `sbatch submit_staging.sh`. Each subdir of staging/
 # becomes one row.
 STAGING_DIR="staging"
+[[ -n "$STAGING_DIR_OVERRIDE" ]] && STAGING_DIR="$STAGING_DIR_OVERRIDE"
 if $SKIP_SAMPLESHEET; then
   echo "[$(date)] --skip-samplesheet given; reusing existing $SAMPLESHEET"
   [[ -f "$SAMPLESHEET" ]] || { echo "ERROR: $SAMPLESHEET not found"; exit 1; }
@@ -150,6 +169,12 @@ echo "  enhancerflow rev: $ENHANCERFLOW_REV (resolving to current main)"
 GENOME_FASTA="$CHIPSEQ_OUTDIR/genome/genome.fa"
 [[ -f "$GENOME_FASTA" ]] || { echo "ERROR: genome FASTA not at $GENOME_FASTA"; exit 1; }
 
+# GREAT: off only when requested (--skip-great). The rgreat container ships just
+# the human TxDb, so mouse runs must pass --skip-great; human leaves it on.
+SKIP_GREAT_FLAG=""
+if $SKIP_GREAT; then SKIP_GREAT_FLAG="--skip_great"; fi
+echo "  skip_great      : $SKIP_GREAT"
+
 nextflow -log logs/nextflow/.nextflow.log \
   run khan-lab/enhancerflow -r "$ENHANCERFLOW_REV" \
   -profile apptainer \
@@ -162,6 +187,6 @@ nextflow -log logs/nextflow/.nextflow.log \
   --skip_crc \
   --skip_comparison \
   --skip_homer \
-  # --skip_great
-  
+  ${SKIP_GREAT_FLAG}
+
 echo "[$(date)] driver exit status: $?"

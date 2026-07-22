@@ -42,12 +42,22 @@ set -euo pipefail
 
 # ── parse args ────────────────────────────────────────────────────────────────
 MEMBER="all"
+CHIPSEQ_SAMPLESHEET_OVERRIDE=""      # override input chipseq samplesheet
+CHIPSEQ_OUTDIR_OVERRIDE=""           # override chipseq out dir (e.g. ../out/human)
+STAGING_DIR_OVERRIDE=""              # override staging dir (e.g. staging_human)
+OUTPUT_SAMPLESHEET_OVERRIDE=""       # override enhancerflow samplesheet name
 EXTRA_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --member) MEMBER="$2"; shift 2 ;;
+    --chipseq-samplesheet) CHIPSEQ_SAMPLESHEET_OVERRIDE="$2"; shift 2 ;;
+    --chipseq-outdir)      CHIPSEQ_OUTDIR_OVERRIDE="$2";      shift 2 ;;
+    --staging-dir)         STAGING_DIR_OVERRIDE="$2";         shift 2 ;;
+    --output-samplesheet)  OUTPUT_SAMPLESHEET_OVERRIDE="$2";  shift 2 ;;
     -h|--help)
-      echo "Usage: sbatch $(basename "$0") [--member N] [orchestrator args ...]"
+      echo "Usage: sbatch $(basename "$0") [--member N] \\"
+      echo "         [--chipseq-samplesheet PATH] [--chipseq-outdir DIR] \\"
+      echo "         [--staging-dir DIR] [--output-samplesheet NAME] [orchestrator args ...]"
       echo "Orchestrator args (passed through):"
       echo "  --skip-stage           regen samplesheet only"
       echo "  --dry-run              preview without submitting"
@@ -74,6 +84,12 @@ fi
 STAGING_DIR="staging"
 LOGS_DIR="logs/staging"
 OUTPUT_SAMPLESHEET="enhancerflow_samplesheet.csv"
+
+# per-organism overrides (default = above, i.e. ENCODE behaviour unchanged)
+[[ -n "$CHIPSEQ_SAMPLESHEET_OVERRIDE" ]] && CHIPSEQ_SAMPLESHEET="$CHIPSEQ_SAMPLESHEET_OVERRIDE"
+[[ -n "$CHIPSEQ_OUTDIR_OVERRIDE" ]]      && CHIPSEQ_OUTDIR="$CHIPSEQ_OUTDIR_OVERRIDE"
+[[ -n "$STAGING_DIR_OVERRIDE" ]]         && STAGING_DIR="$STAGING_DIR_OVERRIDE"
+[[ -n "$OUTPUT_SAMPLESHEET_OVERRIDE" ]]  && OUTPUT_SAMPLESHEET="$OUTPUT_SAMPLESHEET_OVERRIDE"
 
 mkdir -p "$LOGS_DIR" "$STAGING_DIR" logs
 
