@@ -136,6 +136,7 @@ else
   python3 make_enhancerflow_samplesheet.py \
     --staging-dir "$STAGING_DIR" \
     --condition   H3K27ac \
+    --output      "$SAMPLESHEET" \
     --absolute \
     >"$SAMPLESHEET_LOG" 2>&1
 
