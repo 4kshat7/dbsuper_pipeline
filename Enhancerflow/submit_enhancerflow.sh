@@ -46,15 +46,19 @@ CHIPSEQ_OUTDIR_OVERRIDE=""           # override chipseq out dir (e.g. ../out/hum
 STAGING_DIR_OVERRIDE=""              # override staging dir (e.g. staging_human)
 SAMPLESHEET_OVERRIDE=""              # override enhancerflow samplesheet name
 SKIP_GREAT=false                     # pass --skip_great (rgreat lacks the mouse TxDb)
+OUTDIR="out/"                        # enhancerflow --outdir; override for reruns
 
 usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] \\"
   echo "         [--chipseq-outdir DIR] [--staging-dir DIR] [--samplesheet NAME] \\"
-  echo "         [--skip-great] [--skip-samplesheet]"
+  echo "         [--outdir DIR] [--skip-great] [--skip-samplesheet]"
   echo ""
   echo "  --member            which chipseq output to consume (default: all)"
   echo "                      maps to ../out/member<N> (or ../out/all)"
   echo "  --genome            assembly passed to ROSE2 + rGREAT (default: mm10)"
+  echo "  --outdir            enhancerflow --outdir (default: out/). Use a"
+  echo "                      separate dir for artefact reruns so the existing"
+  echo "                      run's results are left intact."
   echo "  --chipseq-outdir    override chipseq out dir (e.g. ../out/human)"
   echo "  --staging-dir       override staging dir (e.g. staging_human)"
   echo "  --samplesheet       override enhancerflow samplesheet name"
@@ -67,6 +71,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --member)            MEMBER="$2";       shift 2 ;;
     --genome)            GENOME="$2";       shift 2 ;;
+    --outdir)            OUTDIR="$2";       shift 2 ;;
     --chipseq-outdir)    CHIPSEQ_OUTDIR_OVERRIDE="$2"; shift 2 ;;
     --staging-dir)       STAGING_DIR_OVERRIDE="$2";    shift 2 ;;
     --samplesheet)       SAMPLESHEET_OVERRIDE="$2";    shift 2 ;;
@@ -96,7 +101,7 @@ SAMPLESHEET="enhancerflow_samplesheet.csv"
 [[ -n "$SAMPLESHEET_OVERRIDE" ]]    && SAMPLESHEET="$SAMPLESHEET_OVERRIDE"
 
 TS="$(date +%Y%m%d-%H%M%S)"
-mkdir -p logs/driver logs/samplesheet logs/nextflow logs/reports out
+mkdir -p logs/driver logs/samplesheet logs/nextflow logs/reports "$OUTDIR"
 
 SAMPLESHEET_LOG="logs/samplesheet/samplesheet-${MEMBER}-${TS}.log"
 
@@ -106,6 +111,7 @@ echo "  member           : $MEMBER"
 echo "  genome           : $GENOME"
 echo "  chipseq_outdir   : $CHIPSEQ_OUTDIR"
 echo "  samplesheet_out  : $SAMPLESHEET"
+echo "  outdir           : $OUTDIR"
 echo "  skip-samplesheet : $SKIP_SAMPLESHEET"
 echo "  timestamp        : $TS"
 
@@ -150,7 +156,7 @@ CONFIG="nextflow.slurm.config"
 echo "[$(date)] launching khan-lab/enhancerflow"
 echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
-echo "  outdir      : out/"
+echo "  outdir      : $OUTDIR"
 
 # Track upstream main. `nextflow pull` (run beforehand or via -latest) refreshes
 # the local asset cache; resolved SHA is logged below for traceability.
@@ -184,7 +190,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   --input          "$SAMPLESHEET" \
   --genome         "$GENOME" \
   --fasta          "$GENOME_FASTA" \
-  --outdir         out/ \
+  --outdir         "$OUTDIR" \
   --skip_crc \
   --skip_comparison \
   --skip_homer \

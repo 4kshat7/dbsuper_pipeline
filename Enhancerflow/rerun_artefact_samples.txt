@@ -1,0 +1,33 @@
+# Samples whose ROSE2 super-enhancer cutoff was inflated by a non-primary
+# contig at rank 1, and which therefore need ROSE2 (and everything downstream
+# of it) re-run after the primary-contig filter is applied.
+#
+# Derived by scanning rank 1 in every out/rose2/<S>/<S>_peaks_AllStitched.table.txt
+# across Member1-6 (400 tables / 391 distinct experiments). Rank 1 is what sets
+# max() in ROSE2's cutoff slope, so only rank-1 artefacts change the SE call set;
+# lower-ranked artefacts are junk rows that a table-level filter can remove.
+#
+#   ENCSR779ISJ is deliberately ABSENT. Its Member6 run does have chrM at rank 1,
+#   but that run is one of 9 orphan duplicates never merged into the database
+#   (the Member5 run, with chr11 at rank 1 and 1110 SEs, is the ingested one).
+#   Quarantine the Member6 duplicates instead of re-running this sample.
+#
+# Format: one sample name per line. '#' comments and blank lines are ignored by
+# bin/filter_staged_peaks.sh --samples.
+#
+# sample        member   rank-1 contig       current SEs
+# ------------  -------  ------------------  -----------
+ENCSR025KPY   # Member1  chrM
+ENCSR082SHT   # Member1  chrM
+ENCSR086QZY   # Member1  chrM
+ENCSR156MYA   # Member2  chrUn_KI270438v1    186   <- the only scaffold-driven case
+ENCSR177QFY   # Member2  chrM
+ENCSR250NHD   # Member2  chrM
+ENCSR397NQK   # Member3  chrM
+ENCSR402HFW   # Member3  chrM
+ENCSR405ESP   # Member3  chrM                194   <- expect ~586 after refilter
+ENCSR612BWE   # Member4  chrM
+ENCSR748TFF   # Member4  chrM
+ENCSR969HBF   # Member5  chrM
+ENCSR405FZE   # Member6  chrM
+ENCSR438SPO   # Member6  chrM
