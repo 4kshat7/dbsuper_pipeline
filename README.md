@@ -8,23 +8,37 @@ The whole pipeline — init → fetch → download → samplesheet → nf-core/c
 
 ```bash
 # metadata + URL samplesheet only (no FASTQ download, no nextflow)
-sbatch submit_driver.sh --member 1
+sbatch submit_driver.sh --member 1 --genome GRCh38 --macs-gsize 2913022398
 
 # same, but with a custom accession subset
-sbatch submit_driver.sh --member 1 --accessions ENCSR000AKC,ENCSR000AKJ
+sbatch submit_driver.sh --member 1 --genome GRCh38 --macs-gsize 2913022398 --accessions ENCSR000AKC,ENCSR000AKJ
 
 # full run: download FASTQs, build local samplesheet, launch nf-core/chipseq
-sbatch submit_driver.sh --member 1 --download
+sbatch submit_driver.sh --member 1 --genome GRCh38 --macs-gsize 2913022398 --download
 
 # resume-only fast path: skip fetch + samplesheet, go straight to nextflow -resume
-sbatch submit_driver.sh --member 1 --download --skip-fetch
+sbatch submit_driver.sh --member 1 --genome GRCh38 --macs-gsize 2913022398 --skip-fetch
 ```
+
+### Required MACS effective genome size
+
+`--macs-gsize` is required for every `submit_driver.sh` invocation. It must
+be a positive integer appropriate for the selected reference genome; the driver
+exits before initialization, fetching, or Nextflow submission if it is omitted.
+
+| Genome | `--macs-gsize` |
+|---|---:|
+| GRCm38 / mm10 | `2652783500` |
+| GRCh38 | `2913022398` |
+| CHM13 / T2T | `3117292070` |
 
 ### Flags
 
 | flag | required | purpose |
 |---|---|---|
 | `--member <1-5>` | yes | picks the pre-assigned accession list for that member |
+| `--genome KEY` | no | iGenomes reference key (driver default: `mm10`) |
+| `--macs-gsize N` | **yes** | positive-integer MACS2 effective genome size; the driver exits before doing any work if omitted |
 | `--accessions A,B,C` | no | override with a custom comma-separated accession subset |
 | `--download` | no | also pull FASTQ files + build local samplesheet + launch nextflow (without this the driver stops after fetching manifest/URL samplesheet) |
 | `--skip-fetch` | no | skip steps 3–4, go directly to `nextflow run -resume`. Requires `raw/encode_results/nfcore_chipseq_samplesheet.local.csv` to already exist |
@@ -348,6 +362,7 @@ nextflow run nf-core/chipseq -r 2.1.0 -profile apptainer \
   --input raw/encode_results/nfcore_chipseq_samplesheet.csv \
   --outdir out/nfcore_chipseq \
   --genome GRCh38 \
+  --macs_gsize 2913022398 \
   --narrow_peak \
   -resume
 ```
@@ -371,6 +386,7 @@ nextflow run nf-core/chipseq -r 2.1.0 -profile apptainer \
   --input raw/encode_results/nfcore_chipseq_samplesheet.local.csv \
   --outdir out/nfcore_chipseq \
   --genome GRCh38 \
+  --macs_gsize 2913022398 \
   --narrow_peak \
   -resume
 ```
