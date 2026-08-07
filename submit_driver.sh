@@ -11,7 +11,7 @@
 #
 # Usage:
 #   sbatch submit_driver.sh --member <1-5> --macs-gsize N \
-#     [--accessions ACC1,ACC2,...] [--download] [--skip-fetch]
+#     [--accessions ACC1,ACC2,...] [--gtf PATH] [--download] [--skip-fetch]
 #
 # Without --download the driver stops after step 3 (manifest/samplesheet only).
 # With --skip-fetch, steps 3 and 4 are skipped entirely -- go straight to
@@ -48,6 +48,7 @@ SKIP_FETCH=false
 SAMPLESHEET_OVERRIDE=""              # override the hardcoded input samplesheet path
 OUTDIR_OVERRIDE=""                   # override the member-derived nextflow --outdir
 BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat local mm10 index)
+GTF_OVERRIDE=""                      # pass a local --gtf instead of the iGenomes GTF
 
 # ── genome selection ────────────────────────────────────────────────────────
 # Override the iGenomes build at submit time with --genome <key>.
@@ -59,13 +60,14 @@ usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
   echo "         --macs-gsize N [--accessions ACC1,ACC2,...] [--genome KEY] \\"
   echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
-  echo "         [--download] [--skip-fetch]"
+  echo "         [--gtf PATH] [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
   echo ""
   echo "  --genome      iGenomes build to align against (default: ${GENOME})."
   echo "  --macs-gsize  Required positive integer: MACS2 effective genome size."
+  echo "  --gtf         Optional local GTF; overrides the GTF from iGenomes."
   exit 1
 }
 
@@ -80,6 +82,7 @@ while [[ $# -gt 0 ]]; do
     --samplesheet) SAMPLESHEET_OVERRIDE="$2"; shift 2 ;;
     --outdir)      OUTDIR_OVERRIDE="$2";      shift 2 ;;
     --bwa-index)   BWA_INDEX_OVERRIDE="$2";   shift 2 ;;
+    --gtf)         GTF_OVERRIDE="$2";         shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -105,6 +108,14 @@ fi
 # Falls back to BASH_SOURCE for manual `bash submit_driver.sh` runs.
 PROJECT_ROOT="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 cd "$PROJECT_ROOT"
+
+if [[ -n "$GTF_OVERRIDE" ]]; then
+  [[ -f "$GTF_OVERRIDE" ]] || {
+    echo "ERROR: --gtf file not found: $GTF_OVERRIDE" >&2
+    exit 2
+  }
+  GTF_OVERRIDE="$(realpath "$GTF_OVERRIDE")"
+fi
 
 TS="$(date +%Y%m%d-%H%M%S)"
 mkdir -p logs/init logs/fetch logs/samplesheet logs/driver logs/nextflow logs/reports
@@ -216,6 +227,7 @@ echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : $OUTDIR"
 echo "  genome      : $GENOME (macs_gsize=$MACS_GSIZE)"
+echo "  gtf         : ${GTF_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 
 # --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
@@ -233,6 +245,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   --outdir     "$OUTDIR" \
   --genome     "$GENOME" \
   --macs_gsize "$MACS_GSIZE" \
+  ${GTF_OVERRIDE:+--gtf "$GTF_OVERRIDE"} \
   ${BWA_INDEX_OVERRIDE:+--bwa_index "$BWA_INDEX_OVERRIDE"} \
   --narrow_peak \
   --skip_spp

@@ -2,6 +2,7 @@
 raw/encode_results/files/
 ref/
 out/
+out_refilter
 nf_work/
 # keep the logs/ directory tracked, but ignore everything inside it
 logs
