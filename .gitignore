@@ -3,6 +3,7 @@ raw/encode_results/files/
 ref/
 out/
 out_refilter
+out_t2t
 nf_work/
 # keep the logs/ directory tracked, but ignore everything inside it
 logs
@@ -35,3 +36,4 @@ venv/
 
 results_*/
 Enhancerflow/staging/
+Enhancerflow/staging_t2t/

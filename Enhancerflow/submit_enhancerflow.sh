@@ -47,15 +47,26 @@ STAGING_DIR_OVERRIDE=""              # override staging dir (e.g. staging_human)
 SAMPLESHEET_OVERRIDE=""              # override enhancerflow samplesheet name
 SKIP_GREAT=false                     # pass --skip_great (rgreat lacks the mouse TxDb)
 OUTDIR="out/"                        # enhancerflow --outdir; override for reruns
+CUSTOM_GENOME=""                     # pass --custom_genome (ROSE2 annotation for T2T/CHM13)
+GTF=""                               # pass a local --gtf instead of the iGenomes GTF
 
 usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] \\"
   echo "         [--chipseq-outdir DIR] [--staging-dir DIR] [--samplesheet NAME] \\"
-  echo "         [--outdir DIR] [--skip-great] [--skip-samplesheet]"
+  echo "         [--outdir DIR] [--custom-genome PATH] [--gtf PATH] \\"
+  echo "         [--skip-great] [--skip-samplesheet]"
   echo ""
   echo "  --member            which chipseq output to consume (default: all)"
   echo "                      maps to ../out/member<N> (or ../out/all)"
   echo "  --genome            assembly passed to ROSE2 + rGREAT (default: mm10)"
+  echo "  --custom-genome     ROSE2 gene annotation table (refseq.ucsc) for an"
+  echo "                      assembly ROSE2 ships no built-in annotation for"
+  echo "                      (T2T/CHM13). When set, ROSE2 uses --custom INSTEAD"
+  echo "                      of -g, so --genome no longer reaches ROSE2."
+  echo "  --gtf               local GTF, overriding the one --genome resolves to"
+  echo "                      from iGenomes. Required for CHM13: the iGenomes"
+  echo "                      CHM13 GTF is an S3 path that does not exist, and"
+  echo "                      nf-schema rejects it at launch."
   echo "  --outdir            enhancerflow --outdir (default: out/). Use a"
   echo "                      separate dir for artefact reruns so the existing"
   echo "                      run's results are left intact."
@@ -75,12 +86,44 @@ while [[ $# -gt 0 ]]; do
     --chipseq-outdir)    CHIPSEQ_OUTDIR_OVERRIDE="$2"; shift 2 ;;
     --staging-dir)       STAGING_DIR_OVERRIDE="$2";    shift 2 ;;
     --samplesheet)       SAMPLESHEET_OVERRIDE="$2";    shift 2 ;;
+    --custom-genome)     CUSTOM_GENOME="$2";           shift 2 ;;
+    --gtf)               GTF="$2";                     shift 2 ;;
     --skip-great)        SKIP_GREAT=true;   shift ;;
     --skip-samplesheet)  SKIP_SAMPLESHEET=true; shift ;;
     -h|--help)           usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
 done
+
+# The ROSE2 module interpolates params.custom_genome straight into the command
+# line — Nextflow does NOT stage it as a path input. So it has to be an absolute
+# path that is visible *inside* the container, which on Karakoram means it must
+# live under a root that nextflow.slurm.config binds (`--bind /storage`).
+# Resolve it here so a relative path on the sbatch line can't silently break the
+# ROSE2 tasks half an hour into the run.
+if [[ -n "$CUSTOM_GENOME" ]]; then
+  [[ -f "$CUSTOM_GENOME" ]] || {
+    echo "ERROR: --custom-genome file not found: $CUSTOM_GENOME" >&2
+    exit 2
+  }
+  CUSTOM_GENOME="$(realpath "$CUSTOM_GENOME")"
+fi
+
+# --genome resolves gtf/fasta from iGenomes, and nf-schema validates both with
+# `exists: true` BEFORE any task runs. The iGenomes CHM13 entry points its GTF at
+# s3://ngi-igenomes/.../Homo_sapiens/NCBI/CHM13/Annotation/Genes/genes.gtf, which
+# is not actually in the public bucket — the run aborts at parameter validation
+# with "the file or directory ... does not exist". So CHM13 needs a local --gtf,
+# the same override submit_driver.sh needs for the chipseq run. (hg38/mm10 GTFs
+# do exist on S3, hence no default here: leaving GTF empty preserves the
+# existing behaviour for those assemblies.)
+if [[ -n "$GTF" ]]; then
+  [[ -f "$GTF" ]] || {
+    echo "ERROR: --gtf file not found: $GTF" >&2
+    exit 2
+  }
+  GTF="$(realpath "$GTF")"
+fi
 
 # ── project layout ────────────────────────────────────────────────────────────
 # Under sbatch, $SLURM_SUBMIT_DIR is the dir you ran sbatch from. We expect
@@ -109,6 +152,8 @@ echo "[$(date)] === enhancerflow driver start ==="
 echo "  enhancerflow_dir : $ENHANCERFLOW_DIR"
 echo "  member           : $MEMBER"
 echo "  genome           : $GENOME"
+echo "  custom_genome    : ${CUSTOM_GENOME:-(none — ROSE2 uses its built-in -g annotation)}"
+echo "  gtf              : ${GTF:-(none — resolved from iGenomes via --genome)}"
 echo "  chipseq_outdir   : $CHIPSEQ_OUTDIR"
 echo "  samplesheet_out  : $SAMPLESHEET"
 echo "  outdir           : $OUTDIR"
@@ -167,6 +212,13 @@ echo "  enhancerflow rev: $ENHANCERFLOW_REV (resolving to current main)"
 # and (when enabled) rGREAT. --fasta overrides the iGenomes S3 URL (compute
 # nodes can't reach it) with the local FASTA that nf-core/chipseq published —
 # the same reference the staged BAMs were aligned to, so coordinates match.
+#
+# --custom_genome (--custom-genome here) is for assemblies ROSE2 has no built-in
+# annotation for. ROSE2 only accepts -g {MM8,MM9,MM10,HG18,HG19,HG38}, and its
+# argparse puts -g and --custom in a mutually exclusive group, so --custom has to
+# REPLACE -g rather than accompany it. Requires khan-lab/enhancerflow >= 612018b
+# ("update rose2, to allow custom_genome ..."); on older revisions the ROSE2
+# module always emits -g and every ROSE2 task aborts with "invalid choice".
 # Skips:
 #   --skip_homer  HOMER off (FIMO/SEA motif analysis still runs)
 #   --skip_great  GREAT off: the rgreat container ships only the human TxDb,
@@ -191,6 +243,8 @@ nextflow -log logs/nextflow/.nextflow.log \
   --genome         "$GENOME" \
   --fasta          "$GENOME_FASTA" \
   --outdir         "$OUTDIR" \
+  ${CUSTOM_GENOME:+--custom_genome "$CUSTOM_GENOME"} \
+  ${GTF:+--gtf "$GTF"} \
   --skip_crc \
   --skip_comparison \
   --skip_homer \
