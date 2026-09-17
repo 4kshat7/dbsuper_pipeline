@@ -11,7 +11,8 @@
 #
 # Usage:
 #   sbatch submit_driver.sh --member <1-5> --macs-gsize N \
-#     [--accessions ACC1,ACC2,...] [--gtf PATH] [--download] [--skip-fetch]
+#     [--accessions ACC1,ACC2,...] [--gtf PATH] [--blacklist PATH] \
+#     [--download] [--skip-fetch]
 #
 # Without --download the driver stops after step 3 (manifest/samplesheet only).
 # With --skip-fetch, steps 3 and 4 are skipped entirely -- go straight to
@@ -49,6 +50,7 @@ SAMPLESHEET_OVERRIDE=""              # override the hardcoded input samplesheet 
 OUTDIR_OVERRIDE=""                   # override the member-derived nextflow --outdir
 BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat local mm10 index)
 GTF_OVERRIDE=""                      # pass a local --gtf instead of the iGenomes GTF
+BLACKLIST_OVERRIDE=""                # pass --blacklist (the CHM13 iGenomes key defines none)
 
 # ── genome selection ────────────────────────────────────────────────────────
 # Override the iGenomes build at submit time with --genome <key>.
@@ -60,7 +62,7 @@ usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
   echo "         --macs-gsize N [--accessions ACC1,ACC2,...] [--genome KEY] \\"
   echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
-  echo "         [--gtf PATH] [--download] [--skip-fetch]"
+  echo "         [--gtf PATH] [--blacklist PATH] [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
@@ -68,6 +70,9 @@ usage() {
   echo "  --genome      iGenomes build to align against (default: ${GENOME})."
   echo "  --macs-gsize  Required positive integer: MACS2 effective genome size."
   echo "  --gtf         Optional local GTF; overrides the GTF from iGenomes."
+  echo "  --blacklist   Optional exclusion-set BED. REQUIRED for --genome CHM13:"
+  echo "                the CHM13 iGenomes key defines no blacklist, so without"
+  echo "                this the run is unfiltered. See T2T note below."
   exit 1
 }
 
@@ -83,6 +88,7 @@ while [[ $# -gt 0 ]]; do
     --outdir)      OUTDIR_OVERRIDE="$2";      shift 2 ;;
     --bwa-index)   BWA_INDEX_OVERRIDE="$2";   shift 2 ;;
     --gtf)         GTF_OVERRIDE="$2";         shift 2 ;;
+    --blacklist)   BLACKLIST_OVERRIDE="$2";   shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -115,6 +121,25 @@ if [[ -n "$GTF_OVERRIDE" ]]; then
     exit 2
   }
   GTF_OVERRIDE="$(realpath "$GTF_OVERRIDE")"
+fi
+
+if [[ -n "$BLACKLIST_OVERRIDE" ]]; then
+  [[ -f "$BLACKLIST_OVERRIDE" ]] || {
+    echo "ERROR: --blacklist file not found: $BLACKLIST_OVERRIDE" >&2
+    exit 2
+  }
+  BLACKLIST_OVERRIDE="$(realpath "$BLACKLIST_OVERRIDE")"
+fi
+
+# The CHM13 iGenomes key carries no blacklist (unlike GRCh38/hg38, which default
+# to ENCODE hg38-blacklist.v3). T2T assembles the centromeric alpha-satellite
+# arrays and acrocentric short arms that hg38 left out, and those become
+# high-signal multi-mapping sinks -- exactly the rank-1 artefact that inflates
+# ROSE2's super-enhancer cutoff downstream. Warn loudly rather than fail, so
+# deliberate unfiltered runs stay possible.
+if [[ "$GENOME" == "CHM13" && -z "$BLACKLIST_OVERRIDE" ]]; then
+  echo "WARNING: --genome CHM13 without --blacklist; no exclusion set will be applied." >&2
+  echo "         Suggested: --blacklist /storage/datasets/igenomes/Homo_sapiens/NCBI/CHM13/Annotation/Blacklist/T2T.excluderanges.bed" >&2
 fi
 
 TS="$(date +%Y%m%d-%H%M%S)"
@@ -229,6 +254,7 @@ echo "  outdir      : $OUTDIR"
 echo "  genome      : $GENOME (macs_gsize=$MACS_GSIZE)"
 echo "  gtf         : ${GTF_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
+echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for CHM13)}"
 
 # --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
 # pipeline bug) and leave phantompeakqualtools nothing to read, which crashes it
@@ -247,6 +273,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   --macs_gsize "$MACS_GSIZE" \
   ${GTF_OVERRIDE:+--gtf "$GTF_OVERRIDE"} \
   ${BWA_INDEX_OVERRIDE:+--bwa_index "$BWA_INDEX_OVERRIDE"} \
+  ${BLACKLIST_OVERRIDE:+--blacklist "$BLACKLIST_OVERRIDE"} \
   --narrow_peak \
   --skip_spp
 
