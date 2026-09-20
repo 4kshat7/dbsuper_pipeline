@@ -50,6 +50,7 @@ SAMPLESHEET_OVERRIDE=""              # override the hardcoded input samplesheet 
 OUTDIR_OVERRIDE=""                   # override the member-derived nextflow --outdir
 BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat local mm10 index)
 GTF_OVERRIDE=""                      # pass a local --gtf instead of the iGenomes GTF
+FASTA_OVERRIDE=""                    # pass a local --fasta instead of the iGenomes (S3) FASTA
 BLACKLIST_OVERRIDE=""                # pass --blacklist (the CHM13 iGenomes key defines none)
 
 # ── genome selection ────────────────────────────────────────────────────────
@@ -62,7 +63,8 @@ usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] \\"
   echo "         --macs-gsize N [--accessions ACC1,ACC2,...] [--genome KEY] \\"
   echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
-  echo "         [--gtf PATH] [--blacklist PATH] [--download] [--skip-fetch]"
+  echo "         [--fasta PATH] [--gtf PATH] [--blacklist PATH] \\"
+  echo "         [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
@@ -70,6 +72,11 @@ usage() {
   echo "  --genome      iGenomes build to align against (default: ${GENOME})."
   echo "  --macs-gsize  Required positive integer: MACS2 effective genome size."
   echo "  --gtf         Optional local GTF; overrides the GTF from iGenomes."
+  echo "  --fasta       Optional local genome FASTA; overrides the iGenomes one."
+  echo "                STRONGLY RECOMMENDED: setting params.igenomes_base in the"
+  echo "                -c config does NOT redirect iGenomes to local disk (the"
+  echo "                paths are baked in at includeConfig time), so without this"
+  echo "                the FASTA is pulled from s3://ngi-igenomes/ over the network."
   echo "  --blacklist   Optional exclusion-set BED. REQUIRED for --genome CHM13:"
   echo "                the CHM13 iGenomes key defines no blacklist, so without"
   echo "                this the run is unfiltered. See T2T note below."
@@ -88,6 +95,7 @@ while [[ $# -gt 0 ]]; do
     --outdir)      OUTDIR_OVERRIDE="$2";      shift 2 ;;
     --bwa-index)   BWA_INDEX_OVERRIDE="$2";   shift 2 ;;
     --gtf)         GTF_OVERRIDE="$2";         shift 2 ;;
+    --fasta)       FASTA_OVERRIDE="$2";       shift 2 ;;
     --blacklist)   BLACKLIST_OVERRIDE="$2";   shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
@@ -121,6 +129,14 @@ if [[ -n "$GTF_OVERRIDE" ]]; then
     exit 2
   }
   GTF_OVERRIDE="$(realpath "$GTF_OVERRIDE")"
+fi
+
+if [[ -n "$FASTA_OVERRIDE" ]]; then
+  [[ -f "$FASTA_OVERRIDE" ]] || {
+    echo "ERROR: --fasta file not found: $FASTA_OVERRIDE" >&2
+    exit 2
+  }
+  FASTA_OVERRIDE="$(realpath "$FASTA_OVERRIDE")"
 fi
 
 if [[ -n "$BLACKLIST_OVERRIDE" ]]; then
@@ -252,6 +268,7 @@ echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : $OUTDIR"
 echo "  genome      : $GENOME (macs_gsize=$MACS_GSIZE)"
+echo "  fasta       : ${FASTA_OVERRIDE:-from igenomes ($GENOME key) -- WARNING: S3 download}"
 echo "  gtf         : ${GTF_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for CHM13)}"
@@ -271,6 +288,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   --outdir     "$OUTDIR" \
   --genome     "$GENOME" \
   --macs_gsize "$MACS_GSIZE" \
+  ${FASTA_OVERRIDE:+--fasta "$FASTA_OVERRIDE"} \
   ${GTF_OVERRIDE:+--gtf "$GTF_OVERRIDE"} \
   ${BWA_INDEX_OVERRIDE:+--bwa_index "$BWA_INDEX_OVERRIDE"} \
   ${BLACKLIST_OVERRIDE:+--blacklist "$BLACKLIST_OVERRIDE"} \
