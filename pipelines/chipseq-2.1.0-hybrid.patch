@@ -1,0 +1,258 @@
+diff --git a/conf/modules.config b/conf/modules.config
+index f53e26c..a3b4ca4 100644
+--- a/conf/modules.config
++++ b/conf/modules.config
+@@ -219,6 +219,28 @@ if (params.aligner == 'bwa') {
+                 enabled: false
+             ]
+         }
++
++        // dbSUPER hybrid patch: GPU lane of FASTQ_ALIGN_BWA (only runs for
++        // samples routed 'gpu' via --bwa_route). Mirrors BWA_MEM above: -M (+ -T),
++        // read group from meta.read_group (passed by the module), secondary
++        // alignments dropped like `samtools view -F 0x0100`, no duplicate marking.
++        withName: 'PARABRICKS_FQ2BAM' {
++            ext.args   = {
++                [
++                    '--no-markdups',
++                    '--filter-flag 256',
++                    "--bwa-options='-M${params.bwa_min_score ? " -T ${params.bwa_min_score}" : ''}${!meta.single_end && params.pb_bwa_pe_opts ? " ${params.pb_bwa_pe_opts}" : ''}'",
++                    params.pb_args ?: ''
++                ].join(' ').trim()
++            }
++            ext.prefix = { "${meta.id}.Lb" }
++            publishDir = [
++                path: { "${params.outdir}/${params.aligner}/library" },
++                mode: params.publish_dir_mode,
++                saveAs: { filename -> filename.equals('versions.yml') ? null : filename },
++                enabled: false
++            ]
++        }
+     }
+ }
+ 
+diff --git a/modules/local/parabricks_fq2bam.nf b/modules/local/parabricks_fq2bam.nf
+new file mode 100644
+index 0000000..d019b08
+--- /dev/null
++++ b/modules/local/parabricks_fq2bam.nf
+@@ -0,0 +1,84 @@
++//
++// NVIDIA Parabricks fq2bam as a drop-in for BWA_MEM (dbSUPER hybrid patch).
++// Adapted from nf-core/modules parabricks/fq2bam (Parabricks 4.7.1-1).
++//
++// Same contract as BWA_MEM in this pipeline:
++//  - one <meta.id>.Lb.bam per FASTQ run, fed to the same BAM_SORT_STATS_SAMTOOLS
++//  - read group from meta.read_group (as bwa -R), '-M', secondary alignments
++//    removed (--filter-flag 256 == samtools view -F 0x0100), no duplicate
++//    marking (Picard MarkDuplicates runs after library merging, as for bwa);
++//    those flags live in ext.args (conf/modules.config)
++//
++// Reference: a prepared directory with a REAL genome.fa, its .fai and
++// genome.fa.{amb,ann,bwt,pac,sa} beside it. pbrun resolves --ref to its real
++// path and looks for the index next to that file, so a symlinked FASTA whose
++// index lives elsewhere fails (exit 255). Build it with
++// dbsuper_pipeline/tools/make_parabricks_ref.sh.
++//
++// GPU wiring (executor, --nv, maxForks, resources) belongs in the run config.
++//
++process PARABRICKS_FQ2BAM {
++    tag "$meta.id"
++    label 'process_high'
++    label 'process_gpu'
++
++    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
++
++    input:
++    tuple val(meta) , path(reads)
++    tuple val(meta2), path(pb_ref)
++
++    output:
++    tuple val(meta), path("*.bam"), emit: bam
++    path  "versions.yml"          , emit: versions
++
++    when:
++    task.ext.when == null || task.ext.when
++
++    script:
++    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
++        error("Parabricks module does not support Conda. Please use Docker / Singularity / Apptainer instead.")
++    }
++    def args   = task.ext.args ?: ''
++    def prefix = task.ext.prefix ?: "${meta.id}.Lb"
++    def in_fq  = meta.single_end ? "--in-se-fq ${reads} ${meta.read_group ?: ''}" : "--in-fq ${reads} ${meta.read_group ?: ''}"
++    // Parabricks defaults to half of the node's RAM for sorting; there are no
++    // cgroups here, so cap it below the task's memory request.
++    def mem_gb = task.memory ? Math.max(8, (task.memory.toGiga() * 0.66) as int) : 32
++    """
++    REF=\$(readlink -f ${pb_ref})/genome.fa
++    for f in "\$REF" "\$REF.fai" "\$REF.amb" "\$REF.ann" "\$REF.bwt" "\$REF.pac" "\$REF.sa"; do
++        [ -s "\$f" ] || { echo "Parabricks reference incomplete, missing: \$f" >&2; exit 2; }
++    done
++
++    PBTMP=\$(mktemp -d -p "\${TMPDIR:-/tmp}" pbtmp.XXXXXX)
++    trap 'rm -rf "\$PBTMP"' EXIT
++
++    pbrun \\
++        fq2bam \\
++        --ref "\$REF" \\
++        ${in_fq} \\
++        --out-bam ${prefix}.bam \\
++        --num-gpus 1 \\
++        --bwa-cpu-thread-pool ${task.cpus} \\
++        --memory-limit ${mem_gb} \\
++        --tmp-dir "\$PBTMP" \\
++        ${args}
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        parabricks: \$(pbrun version 2>&1 | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//')
++    END_VERSIONS
++    """
++
++    stub:
++    def prefix = task.ext.prefix ?: "${meta.id}.Lb"
++    """
++    touch ${prefix}.bam
++
++    cat <<-END_VERSIONS > versions.yml
++    "${task.process}":
++        parabricks: 4.7.1-1
++    END_VERSIONS
++    """
++}
+diff --git a/nextflow.config b/nextflow.config
+index 2f01313..59f008f 100644
+--- a/nextflow.config
++++ b/nextflow.config
+@@ -38,6 +38,12 @@ params {
+     save_align_intermeds       = false
+     save_unaligned             = false
+ 
++    // Options: dbSUPER hybrid patch — optional Parabricks GPU lane for aligner 'bwa'
++    bwa_route                  = null   // TSV <sample>_REP<n><TAB>cpu|gpu; unset = all BWA_MEM (stock)
++    parabricks_ref             = null   // dir: real genome.fa + .fai + genome.fa.{amb,ann,bwt,pac,sa}
++    pb_bwa_pe_opts             = null   // extra bwa options for paired-end GPU runs, e.g. '-K 320000000'
++    pb_args                    = null   // extra 'pbrun fq2bam' options
++
+     // Options: Peaks
+     narrow_peak                = false
+     broad_cutoff               = 0.1
+diff --git a/nextflow_schema.json b/nextflow_schema.json
+index 20e71c9..3a8b0ca 100644
+--- a/nextflow_schema.json
++++ b/nextflow_schema.json
+@@ -237,6 +237,30 @@
+                     "fa_icon": "fas fa-map-signs",
+                     "enum": ["bwa", "bowtie2", "chromap", "star"]
+                 },
++                "bwa_route": {
++                    "type": "string",
++                    "format": "file-path",
++                    "exists": true,
++                    "description": "dbSUPER hybrid patch: TSV of '<sample>_REP<n><TAB>cpu|gpu'. Sample-replicates marked 'gpu' are aligned with NVIDIA Parabricks fq2bam instead of BWA_MEM (aligner 'bwa' only). Unset = stock behaviour.",
++                    "fa_icon": "fas fa-route"
++                },
++                "parabricks_ref": {
++                    "type": "string",
++                    "format": "directory-path",
++                    "exists": true,
++                    "description": "dbSUPER hybrid patch: directory holding a real genome.fa, genome.fa.fai and genome.fa.{amb,ann,bwt,pac,sa} for the Parabricks GPU lane.",
++                    "fa_icon": "fas fa-folder-open"
++                },
++                "pb_bwa_pe_opts": {
++                    "type": "string",
++                    "description": "dbSUPER hybrid patch: extra bwa options for paired-end reads on the GPU lane, e.g. '-K 320000000'.",
++                    "fa_icon": "fas fa-cog"
++                },
++                "pb_args": {
++                    "type": "string",
++                    "description": "dbSUPER hybrid patch: extra 'pbrun fq2bam' options for the GPU lane.",
++                    "fa_icon": "fas fa-cog"
++                },
+                 "keep_dups": {
+                     "type": "boolean",
+                     "description": "Duplicate reads are not filtered from alignments.",
+diff --git a/subworkflows/nf-core/fastq_align_bwa/main.nf b/subworkflows/nf-core/fastq_align_bwa/main.nf
+index c7408d0..975adbd 100644
+--- a/subworkflows/nf-core/fastq_align_bwa/main.nf
++++ b/subworkflows/nf-core/fastq_align_bwa/main.nf
+@@ -1,8 +1,17 @@
+ //
+ // Alignment with BWA
+ //
++// dbSUPER hybrid patch: optional GPU lane. When params.bwa_route is set, every
++// sample-replicate (meta.id without its _T<n> run suffix) marked 'gpu' in that
++// TSV is aligned with NVIDIA Parabricks fq2bam instead of BWA_MEM; all other
++// reads, and all reads when bwa_route is unset, go through the unchanged
++// BWA_MEM call below (same name/script/inputs, so -resume keeps its cache).
++// Both lanes feed the same BAM_SORT_STATS_SAMTOOLS, so file names, QC, publish
++// paths and every downstream step are identical.
++//
+ 
+ include { BWA_MEM                 } from '../../../modules/nf-core/bwa/mem/main'
++include { PARABRICKS_FQ2BAM       } from '../../../modules/local/parabricks_fq2bam'
+ include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
+ 
+ workflow FASTQ_ALIGN_BWA {
+@@ -16,21 +25,56 @@ workflow FASTQ_ALIGN_BWA {
+     ch_versions = Channel.empty()
+ 
+     //
+-    // Map reads with BWA
++    // Route each sample-replicate to the CPU (BWA_MEM) or GPU (Parabricks) lane
+     //
++    def route = [:]
++    if (params.bwa_route) {
++        file(params.bwa_route, checkIfExists: true).eachLine { line ->
++            def fields = line.trim().tokenize('\t')
++            if (!fields || fields[0].startsWith('#')) return
++            if (fields.size() < 2 || !(fields[1] in ['cpu', 'gpu'])) {
++                error("Invalid line in --bwa_route ${params.bwa_route}: '${line}' (expected: <sample>_REP<n><TAB>cpu|gpu)")
++            }
++            route[fields[0]] = fields[1]
++        }
++    }
++    if (route.containsValue('gpu') && !params.parabricks_ref) {
++        error("--bwa_route sends samples to the GPU lane but --parabricks_ref is not set")
++    }
++
++    ch_reads
++        .branch { meta, reads ->
++            gpu: route[meta.id - ~/_T\d+$/] == 'gpu'
++            cpu: true
++        }
++        .set { ch_lane }
+ 
+-    BWA_MEM ( ch_reads, ch_index, ch_fasta, val_sort_bam )
++    //
++    // Map reads with BWA (CPU lane)
++    //
++    BWA_MEM ( ch_lane.cpu, ch_index, ch_fasta, val_sort_bam )
+     ch_versions = ch_versions.mix(BWA_MEM.out.versions.first())
+ 
++    //
++    // Map reads with Parabricks fq2bam (GPU lane)
++    //
++    ch_pb_ref = params.parabricks_ref
++        ? Channel.value([ [:], file(params.parabricks_ref, checkIfExists: true) ])
++        : Channel.empty()
++    PARABRICKS_FQ2BAM ( ch_lane.gpu, ch_pb_ref )
++    ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions.first())
++
++    ch_bam = BWA_MEM.out.bam.mix(PARABRICKS_FQ2BAM.out.bam)
++
+     //
+     // Sort, index BAM file and run samtools stats, flagstat and idxstats
+     //
+ 
+-    BAM_SORT_STATS_SAMTOOLS ( BWA_MEM.out.bam, ch_fasta )
++    BAM_SORT_STATS_SAMTOOLS ( ch_bam, ch_fasta )
+     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
+ 
+     emit:
+-    bam_orig = BWA_MEM.out.bam                      // channel: [ val(meta), path(bam) ]
++    bam_orig = ch_bam                               // channel: [ val(meta), path(bam) ]
+ 
+     bam      = BAM_SORT_STATS_SAMTOOLS.out.bam      // channel: [ val(meta), path(bam) ]
+     bai      = BAM_SORT_STATS_SAMTOOLS.out.bai      // channel: [ val(meta), path(bai) ]

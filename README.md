@@ -71,8 +71,39 @@ logs/
 
 - Safe to re-submit with the exact same args — `init.sh` skips, encodefetch skips already-downloaded files, `make_nfcode_samplesheet.py` is idempotent, Nextflow `-resume` reuses task cache from `workDir`.
 - To force re-init: `rm .init_done`.
-- To force a clean nextflow run: `rm -rf .nextflow/` (leaves `workDir/` cached tasks intact; those get re-hashed on next run).
+- **Pin the session when resuming a long run:** `--resume-session <uuid>`. A bare `-resume` takes the *last* line of `.nextflow/history`, whichever run wrote it — a stray `-preview`/test run launched from this directory silently starts a new session and every cached task re-runs. Never run test/preview runs from this directory.
+- `rm -rf .nextflow/` does **not** give a "clean re-hash": it deletes the task-cache index and history, so the next run starts a new session and re-runs everything already in `workDir/`.
 - To wipe Nextflow task cache: `rm -rf <workDir>` (path in `nfcore_chipseq.config`).
+- Changing cpus/memory/queue in `nfcore_chipseq.config` is resume-safe (Nextflow does not fingerprint them). Changing `--fasta`, `--bwa-index`, `--gtf`, a module's arguments, or writing any file into the iGenomes BWA index directory is not: it re-runs every task that uses it.
+
+### GPU lane (CPU + GPU hybrid alignment)
+
+Optional. A patched nf-core/chipseq 2.1.0 (`pipelines/chipseq-2.1.0-hybrid.patch`) can align chosen samples with **NVIDIA Parabricks `fq2bam`** on Karakoram's single GPU while the rest go through the normal CPU `BWA_MEM` at the same time. Parabricks is a GPU re-implementation of BWA-MEM: same algorithm and flags (`-M`, read group, secondary alignments dropped, no duplicate marking at this stage), so the alignments are the same — a pilot on already-aligned GEO libraries found single-end BAMs record-for-record identical. Only alignment is accelerated; everything after it is unchanged, and outputs stay in `out/<org>/bwa/…` (Enhancerflow needs no change). Without `--route` the patched pipeline behaves exactly like stock nf-core/chipseq.
+
+One-time setup:
+```bash
+bash tools/install_chipseq_hybrid.sh          # -> ../pipelines/chipseq-2.1.0-hybrid (never edit/move it while a session may resume)
+bash tools/make_parabricks_ref.sh GRCh38      # -> ref/parabricks/GRCh38 (real FASTA + .fai + BWA index in one read-only dir)
+cp /storage/software/containers/nvcr.io-nvidia-clara-clara-parabricks-4.7.1-1.img ~/.singularity_cache/   # or let apptainer pull it
+```
+
+Per run — decide which samples go to the GPU (already-aligned samples stay on CPU; the largest remaining ones go to the GPU until both lanes are predicted to finish together):
+```bash
+python3 tools/make_gpu_route.py --samplesheet raw/geo_results/human_chipseq_samplesheet.local.csv \
+    --status logs/reports/nfcore_trace.<last_run>.txt --route raw/geo_results/bwa_route_human.tsv --dry-run
+# drop --dry-run to write it. The route file is append-only; keep it with the outputs (it records which aligner made each BAM).
+```
+
+Launch — the driver itself must hold the GPU (the GPU step runs inside it, one sample at a time):
+```bash
+sbatch -p gpu --gres=gpu:1 -c 20 --mem=144G submit_driver.sh --skip-fetch --genome GRCh38 --macs-gsize 2913022398 \
+    --samplesheet raw/geo_results/human_chipseq_samplesheet.local.csv --outdir out/human \
+    --fasta <...> --gtf <...> --bwa-index <...> \
+    --pipeline ../pipelines/chipseq-2.1.0-hybrid --route raw/geo_results/bwa_route_human.tsv \
+    --parabricks-ref ref/parabricks/GRCh38 --resume-session <session-uuid>
+```
+
+Rules: once a session has run with the hybrid pipeline, keep resuming it with the same deployed copy (switching back re-aligns the GPU samples); the first switch re-runs only three small setup tasks. The GPU is not fenced by SLURM here — never run another GPU job alongside. Also never *queue* one: while the driver holds the GPU, any job waiting for `--gres=gpu` gets a planned start at the driver's end, and SLURM's backfill then holds back the pipeline's own CPU tasks (observed 2026-09-28: tasks sat `PENDING (None)` for 70 min on an idle node until the queued GPU job was cancelled). If CPU tasks stall like that, check `squeue -p gpu`. After all alignments finish, the driver can be restarted without `-p gpu --gres` to free the GPU for the downstream phase: prefix the command with `ALLOW_NO_GPU=1` (everything GPU-routed is cached by then; the driver otherwise refuses a GPU route without a GPU).
 
 ### Cancelling
 

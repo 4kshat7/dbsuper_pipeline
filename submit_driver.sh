@@ -52,6 +52,10 @@ BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat loc
 GTF_OVERRIDE=""                      # pass a local --gtf instead of the iGenomes GTF
 FASTA_OVERRIDE=""                    # pass a local --fasta instead of the iGenomes (S3) FASTA
 BLACKLIST_OVERRIDE=""                # pass --blacklist (the CHM13 iGenomes key defines none)
+PIPELINE_DIR=""                      # run a deployed local pipeline (e.g. the CPU+GPU hybrid) instead of nf-core/chipseq -r 2.1.0
+BWA_ROUTE=""                         # hybrid only: per-sample CPU/GPU route TSV (--bwa_route)
+PARABRICKS_REF=""                    # hybrid only: Parabricks reference dir (--parabricks_ref)
+RESUME_SESSION=""                    # resume this exact Nextflow session UUID (a bare -resume takes the LAST history entry)
 
 # ── genome selection ────────────────────────────────────────────────────────
 # Override the iGenomes build at submit time with --genome <key>.
@@ -64,7 +68,8 @@ usage() {
   echo "         --macs-gsize N [--accessions ACC1,ACC2,...] [--genome KEY] \\"
   echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
   echo "         [--fasta PATH] [--gtf PATH] [--blacklist PATH] \\"
-  echo "         [--download] [--skip-fetch]"
+  echo "         [--download] [--skip-fetch] [--resume-session UUID] \\"
+  echo "         [--pipeline DIR --route TSV --parabricks-ref DIR]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
@@ -80,6 +85,16 @@ usage() {
   echo "  --blacklist   Optional exclusion-set BED. REQUIRED for --genome CHM13:"
   echo "                the CHM13 iGenomes key defines no blacklist, so without"
   echo "                this the run is unfiltered. See T2T note below."
+  echo "  --resume-session  Resume exactly this Nextflow session UUID. Without it"
+  echo "                -resume takes the LAST entry of .nextflow/history, whatever"
+  echo "                run that was (a stray -preview/test run hijacks it)."
+  echo ""
+  echo "  CPU+GPU hybrid alignment (see README, 'GPU lane'):"
+  echo "  --pipeline    Deployed pipeline dir from tools/install_chipseq_hybrid.sh."
+  echo "  --route       CPU/GPU route TSV from tools/make_gpu_route.py."
+  echo "  --parabricks-ref  Reference dir from tools/make_parabricks_ref.sh."
+  echo "                A route with any 'gpu' line needs a driver that holds the GPU:"
+  echo "                sbatch -p gpu --gres=gpu:1 -c 20 --mem=144G submit_driver.sh ..."
   exit 1
 }
 
@@ -97,6 +112,10 @@ while [[ $# -gt 0 ]]; do
     --gtf)         GTF_OVERRIDE="$2";         shift 2 ;;
     --fasta)       FASTA_OVERRIDE="$2";       shift 2 ;;
     --blacklist)   BLACKLIST_OVERRIDE="$2";   shift 2 ;;
+    --pipeline)    PIPELINE_DIR="$2";         shift 2 ;;
+    --route)       BWA_ROUTE="$2";            shift 2 ;;
+    --parabricks-ref) PARABRICKS_REF="$2";    shift 2 ;;
+    --resume-session) RESUME_SESSION="$2";    shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -273,6 +292,55 @@ echo "  gtf         : ${GTF_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for CHM13)}"
 
+# Which pipeline: stock nf-core/chipseq 2.1.0, or a deployed local copy (the
+# CPU+GPU hybrid from tools/install_chipseq_hybrid.sh). Once a session has run
+# with the hybrid copy, keep using that same copy for it: switching back would
+# re-align its GPU samples, and a local copy's bin/assets are fingerprinted by
+# path+mtime, so it must not be moved or re-deployed mid-session.
+PIPELINE_ARGS=(nf-core/chipseq -r 2.1.0)
+if [[ -n "$PIPELINE_DIR" ]]; then
+  [[ -f "$PIPELINE_DIR/main.nf" ]] || { echo "ERROR: --pipeline $PIPELINE_DIR has no main.nf" >&2; exit 1; }
+  PIPELINE_ARGS=("$(cd "$PIPELINE_DIR" && pwd)")
+fi
+HYBRID_ARGS=()
+if [[ -n "$BWA_ROUTE" ]]; then
+  [[ -n "$PIPELINE_DIR" ]] || { echo "ERROR: --route needs --pipeline <hybrid pipeline dir>" >&2; exit 1; }
+  [[ -f "$BWA_ROUTE" ]]    || { echo "ERROR: --route file not found: $BWA_ROUTE" >&2; exit 1; }
+  HYBRID_ARGS+=(--bwa_route "$(readlink -f "$BWA_ROUTE")")
+  N_GPU=$(awk -F'\t' '!/^#/ && $2=="gpu"' "$BWA_ROUTE" | wc -l)
+  if (( N_GPU > 0 )); then
+    [[ -n "$PARABRICKS_REF" ]] || { echo "ERROR: route has $N_GPU 'gpu' samples but no --parabricks-ref" >&2; exit 1; }
+    # The GPU lane runs inside this driver (local executor). SLURM does not fence
+    # the GPU here, so the driver must reserve it or another job could collide.
+    # ALLOW_NO_GPU=1 skips this ONLY for a restart after every GPU sample is
+    # already aligned (cached), e.g. to free the GPU for the downstream phase.
+    if [[ -z "${SLURM_JOB_GPUS:-}" && -z "${CUDA_VISIBLE_DEVICES:-}" ]]; then
+      if [[ "${ALLOW_NO_GPU:-0}" == "1" ]]; then
+        echo "WARNING: ALLOW_NO_GPU=1 -- running a GPU route without a GPU; any GPU sample not yet cached will fail." >&2
+      else
+        echo "ERROR: route has $N_GPU 'gpu' samples but this driver holds no GPU. Submit with:" >&2
+        echo "  sbatch -p gpu --gres=gpu:1 -c 20 --mem=144G $(basename "$0") ..." >&2
+        exit 1
+      fi
+    fi
+  fi
+fi
+[[ -n "$PARABRICKS_REF" ]] && HYBRID_ARGS+=(--parabricks_ref "$(readlink -f "$PARABRICKS_REF")")
+
+# Resume: pin the session when given. A bare -resume takes the last line of
+# .nextflow/history, whichever run wrote it.
+RESUME_ARGS=(-resume)
+if [[ -n "$RESUME_SESSION" ]]; then
+  grep -qP "\t${RESUME_SESSION}\t" .nextflow/history 2>/dev/null \
+    || { echo "ERROR: session $RESUME_SESSION not found in .nextflow/history" >&2; exit 1; }
+  RESUME_ARGS=(-resume "$RESUME_SESSION")
+else
+  echo "  resume      : bare -resume -> last history session $(tail -n1 .nextflow/history 2>/dev/null | cut -f6)"
+fi
+echo "  pipeline    : ${PIPELINE_ARGS[*]}"
+echo "  resume      : ${RESUME_ARGS[*]}"
+[[ -n "$BWA_ROUTE" ]] && echo "  gpu route   : $BWA_ROUTE (${N_GPU} gpu sample-replicates; GPUs: ${SLURM_JOB_GPUS:-${CUDA_VISIBLE_DEVICES:-none}})"
+
 # --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
 # pipeline bug) and leave phantompeakqualtools nothing to read, which crashes it
 # and (since its errorStrategy isn't 'retry'-eligible) aborts the whole run. Its
@@ -280,10 +348,11 @@ echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for
 # downstream -- so skipping it is safe; those samples still yield ~0 peaks and
 # get dropped later by make_enhancerflow_samplesheet.py's --min-peaks check.
 nextflow -log logs/nextflow/.nextflow.log \
-  run nf-core/chipseq -r 2.1.0 \
+  run "${PIPELINE_ARGS[@]}" \
   -profile apptainer \
   -c "$CONFIG" \
-  -resume \
+  "${RESUME_ARGS[@]}" \
+  "${HYBRID_ARGS[@]}" \
   --input      "$SAMPLESHEET" \
   --outdir     "$OUTDIR" \
   --genome     "$GENOME" \

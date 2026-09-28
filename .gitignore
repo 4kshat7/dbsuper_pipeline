@@ -1,7 +1,7 @@
 # ── Pipeline data & outputs ────────────────────────────────────────────────
 raw/encode_results/files/
 ref/
-out/
+out*/
 out_refilter
 out_t2t
 nf_work/
