@@ -3,7 +3,7 @@
 ## Context
 
 The user asked whether Karakoram's single GPU can speed up the Phase-1 nf-core/chipseq runs. This was prompted by
-Yusuf Maulana's benchmark: Parabricks `fq2bam` was 5.9–7.2× faster than 32-core BWA-MEM, with identical peaks.
+benchmark: Parabricks `fq2bam` was 5.9–7.2× faster than 32-core BWA-MEM, with identical peaks.
 
 They want to know:
 1. Is running CPU + GPU together faster?
@@ -29,7 +29,7 @@ in parallel, and it produces the same alignments. It is free, runs in a containe
 ## Answer
 
 **Possible: yes.**
-- Parabricks 4.7.1-1 has already run successfully on this exact node, driver 615.71 and 48 GB RTX 6000 Ada, in Yusuf's runs on 2026-09-23.
+- Parabricks 4.7.1-1 has already run successfully on this exact node, driver 615.71 and 48 GB RTX 6000 Ada, in runs on 2026-09-23.
 - The SIF is at `/storage/software/containers/nvcr.io-nvidia-clara-clara-parabricks-4.7.1-1.img`.
 
 **Faster together: yes, as an extra lane next to the CPUs. Never as GPU-only.**
@@ -56,7 +56,7 @@ count 1:1 toward the total:
 
 ## Design
 
-**What we reuse from Yusuf** (`/storage/projects/yusuf.maulana/parabricks-benchmark/pipeline-checkouts-backup/chipseq-parabricks`, commit `52bd58a`):
+**What we reuse from ** (`/storage/projects/yusuf.maulana/parabricks-benchmark/pipeline-checkouts-backup/chipseq-parabricks`, commit `52bd58a`):
 - His fq2bam module and flags: `--no-markdups --filter-flag 256 --bwa-options='-M'`, the read group after the FASTQs, and `--in-se-fq` for SE.
   Together these equal chipseq's `bwa mem -M -R | samtools view -F 0x100`.
 - **Not** his `--aligner parabricks` switch, because it:
@@ -74,7 +74,7 @@ TRIMGALORE reads ── branch on route[meta.id minus _T<n>] ──┬─ cpu �
 - The route file is **append-only**. The one exception: a GPU key that failed and has no alignment can be moved to CPU.
 - **The GPU lane runs with Nextflow's `local` executor, inside the driver job.** The driver is submitted with
   `sbatch -p gpu --gres=gpu:1 -c 36 --mem=128G`.
-  - This removes the 4–12 min SLURM wait per GPU task seen in Yusuf's runs, which would otherwise erase the gain.
+  - This removes the 4–12 min SLURM wait per GPU task seen in runs, which would otherwise erase the gain.
   - It holds the GPU for the run; OK per the user.
   - After the alignment barrier the driver can be restarted without `--gres`: everything is cached, and the GPU is freed.
 
@@ -103,14 +103,14 @@ TRIMGALORE reads ── branch on route[meta.id minus _T<n>] ──┬─ cpu �
   directory mid-session would re-run the downstream steps.
 
 Patch contents:
-- `modules/local/parabricks_fq2bam/main.nf`, adapted from Yusuf's module:
+- `modules/local/parabricks_fq2bam/main.nf`, adapted from module:
   - input: reads + a Parabricks reference dir;
   - `--ref <that dir>/genome.fa`, `--num-gpus 1`;
   - `--tmp-dir` via `mktemp -d` under `$TMPDIR` (NVMe `/scratch`), removed on exit;
   - `--memory-limit` ≈ 0.66 × task.memory (the default is half the node, and there are no cgroups);
   - emits `<meta.id>.Lb.bam` + `versions.yml`.
 - `subworkflows/nf-core/fastq_align_bwa/main.nf`: the `branch` + `mix` above. The `BWA_MEM(...)` call is left byte-identical.
-- `conf/modules.config`: PARABRICKS ext.args, defined unconditionally in the bwa block (in Yusuf's patch they only exist under
+- `conf/modules.config`: PARABRICKS ext.args, defined unconditionally in the bwa block (in  patch they only exist under
   `aligner=='parabricks'`), and `ext.prefix = "${meta.id}.Lb"`.
 - `nextflow.config`: new params `bwa_route`, `parabricks_ref` and `pb_pe_bwa_opts`, all null by default. The pilot decides
   PE `-K 320000000`, which mimics our CPU's 320 Mbp batches. With the params unset, the pipeline behaves exactly like stock.
@@ -126,7 +126,7 @@ Patch contents:
     maxRetries = 2; maxErrors = 25          // circuit breaker: a systematic GPU failure stops the run
   }
   ```
-  Also copy the SIF into `~/.singularity_cache/` under the same filename, so there is no pull and no dependency on Yusuf's file.
+  Also copy the SIF into `~/.singularity_cache/` under the same filename, so there is no pull and no dependency on file.
 - `tools/make_parabricks_ref.sh <GRCh38|mm10>` builds gitignored `ref/parabricks/<g>/` with **real copies** of
   `genome.fa`, `.fai`, and `genome.fa.{amb,ann,bwt,pac,sa}` (≈9 GB each).
   **It never writes into `/storage/datasets/igenomes`.** That directory is group-writable, and one new file in
@@ -183,7 +183,7 @@ Enhancerflow finishes.
    - GPU memory;
    - that `/storage/datasets` mtimes are unchanged;
    - whether mismatched mates are rejected;
-   - whether an option such as `--fix-mate` restores the MC/MQ tags. These are the only difference Yusuf's BAMs showed, and they shift Picard PCT_CHIMERAS.
+   - whether an option such as `--fix-mate` restores the MC/MQ tags. These are the only difference  BAMs showed, and they shift Picard PCT_CHIMERAS.
 2. **Record-level BAM comparison** against our existing CPU `.Lb.bam` files (read-only from `nf_work`):
    - Fields compared: flag, chrom, pos, MAPQ, CIGAR, NM, MD, AS, and mate fields.
    - Pass: SE identical except tags/header; PE ≥99.9% identical with the chosen `-K`.
@@ -208,7 +208,7 @@ Enhancerflow finishes.
 
 - SE on Parabricks and ≤50 bp reads have never been run; tests 1–2 settle this.
 - PE equivalence with our no-`-K` CPU BAMs is unproven.
-- The ~50 s fixed start-up cost is fitted from Yusuf's PE/T2T runs.
+- The ~50 s fixed start-up cost is fitted from PE/T2T runs.
 - The GPU lane's gain is conditional on low per-task overhead (local executor) and on the CPU side being right-sized. The whole-pipeline downstream estimate is ±50%.
 - There is no GPU/memory fencing (no cgroups). Parabricks pre-allocates ~38 GB of the 48 GB, so no second GPU process may run.
 - Alternative not in scope: **bwa-mem2** (CPU; claims ~2× on every slot with output identical to bwa). The same route hook could host it later, after its own pilot.

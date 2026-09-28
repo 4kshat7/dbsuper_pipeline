@@ -6,7 +6,7 @@
 #   1. activate micromamba env 'dbsuper_pipeline'
 #   2. make_enhancerflow_samplesheet.py
 #        chipseq samplesheet + chipseq out/ → enhancerflow_samplesheet.csv
-#   3. nextflow run khan-lab/enhancerflow ...
+#      geneMapper outputs — switch back to khan-lab/enhancerflow once the PR is merged)
 #
 # Layout (everything stays under Enhancerflow/):
 #   logs/driver/      — driver job stdout/err
@@ -198,7 +198,12 @@ fi
 CONFIG="nextflow.slurm.config"
 [[ -f "$CONFIG" ]] || { echo "ERROR: missing $CONFIG"; exit 1; }
 
-echo "[$(date)] launching khan-lab/enhancerflow"
+# rose2-geneMapper outputs: *_REGION_TO_GENE, *_GENE_TO_REGION, *_withGENES)
+# is merged into khan-lab/enhancerflow. Once merged, revert this to
+# "khan-lab/enhancerflow" (and the header comment on line 9).
+ENHANCERFLOW_REPO="khan-lab/enhancerflow"
+
+echo "[$(date)] launching $ENHANCERFLOW_REPO"
 echo "  samplesheet : $SAMPLESHEET"
 echo "  config      : $CONFIG"
 echo "  outdir      : $OUTDIR"
@@ -235,7 +240,7 @@ if $SKIP_GREAT; then SKIP_GREAT_FLAG="--skip_great"; fi
 echo "  skip_great      : $SKIP_GREAT"
 
 nextflow -log logs/nextflow/.nextflow.log \
-  run khan-lab/enhancerflow -r "$ENHANCERFLOW_REV" \
+  run "$ENHANCERFLOW_REPO" -r "$ENHANCERFLOW_REV" \
   -profile apptainer \
   -c "$CONFIG" \
   -resume \
