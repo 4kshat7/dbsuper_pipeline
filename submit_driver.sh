@@ -52,6 +52,7 @@ BWA_INDEX_OVERRIDE=""                # pass --bwa_index (needed for the flat loc
 GTF_OVERRIDE=""                      # pass a local --gtf instead of the iGenomes GTF
 FASTA_OVERRIDE=""                    # pass a local --fasta instead of the iGenomes (S3) FASTA
 BLACKLIST_OVERRIDE=""                # pass --blacklist (the CHM13 iGenomes key defines none)
+WORK_DIR_OVERRIDE=""                 # pass -w (separate nf_work/ task cache per dataset)
 
 # ── genome selection ────────────────────────────────────────────────────────
 # Override the iGenomes build at submit time with --genome <key>.
@@ -64,7 +65,7 @@ usage() {
   echo "         --macs-gsize N [--accessions ACC1,ACC2,...] [--genome KEY] \\"
   echo "         [--samplesheet PATH] [--outdir NAME] [--bwa-index DIR] \\"
   echo "         [--fasta PATH] [--gtf PATH] [--blacklist PATH] \\"
-  echo "         [--download] [--skip-fetch]"
+  echo "         [--work-dir DIR] [--download] [--skip-fetch]"
   echo ""
   echo "  Omitting --member (or passing --member all) fetches the union of all"
   echo "  five member files = the full 913-accession dataset."
@@ -80,6 +81,8 @@ usage() {
   echo "  --blacklist   Optional exclusion-set BED. REQUIRED for --genome CHM13:"
   echo "                the CHM13 iGenomes key defines no blacklist, so without"
   echo "                this the run is unfiltered. See T2T note below."
+  echo "  --work-dir    Optional Nextflow work dir (-w); overrides the workDir in"
+  echo "                nfcore_chipseq.config so a dataset gets its own task cache."
   exit 1
 }
 
@@ -97,6 +100,7 @@ while [[ $# -gt 0 ]]; do
     --gtf)         GTF_OVERRIDE="$2";         shift 2 ;;
     --fasta)       FASTA_OVERRIDE="$2";       shift 2 ;;
     --blacklist)   BLACKLIST_OVERRIDE="$2";   shift 2 ;;
+    --work-dir)    WORK_DIR_OVERRIDE="$2";    shift 2 ;;
     -h|--help)     usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -272,6 +276,7 @@ echo "  fasta       : ${FASTA_OVERRIDE:-from igenomes ($GENOME key) -- WARNING: 
 echo "  gtf         : ${GTF_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for CHM13)}"
+echo "  work_dir    : ${WORK_DIR_OVERRIDE:-from $CONFIG (workDir)}"
 
 # --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
 # pipeline bug) and leave phantompeakqualtools nothing to read, which crashes it
@@ -283,6 +288,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   run nf-core/chipseq -r 2.1.0 \
   -profile apptainer \
   -c "$CONFIG" \
+  ${WORK_DIR_OVERRIDE:+-w "$WORK_DIR_OVERRIDE"} \
   -resume \
   --input      "$SAMPLESHEET" \
   --outdir     "$OUTDIR" \

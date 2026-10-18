@@ -49,12 +49,13 @@ SKIP_GREAT=false                     # pass --skip_great (rgreat lacks the mouse
 OUTDIR="out/"                        # enhancerflow --outdir; override for reruns
 CUSTOM_GENOME=""                     # pass --custom_genome (ROSE2 annotation for T2T/CHM13)
 GTF=""                               # pass a local --gtf instead of the iGenomes GTF
+WORK_DIR=""                          # pass -w (separate nf_work/ task cache per dataset)
 
 usage() {
   echo "Usage: sbatch $(basename "$0") [--member <1-5|all>] [--genome KEY] \\"
   echo "         [--chipseq-outdir DIR] [--staging-dir DIR] [--samplesheet NAME] \\"
   echo "         [--outdir DIR] [--custom-genome PATH] [--gtf PATH] \\"
-  echo "         [--skip-great] [--skip-samplesheet]"
+  echo "         [--work-dir DIR] [--skip-great] [--skip-samplesheet]"
   echo ""
   echo "  --member            which chipseq output to consume (default: all)"
   echo "                      maps to ../out/member<N> (or ../out/all)"
@@ -75,6 +76,9 @@ usage() {
   echo "  --samplesheet       override enhancerflow samplesheet name"
   echo "  --skip-great        pass --skip_great to enhancerflow (use for mouse)"
   echo "  --skip-samplesheet  reuse the existing enhancerflow samplesheet"
+  echo "  --work-dir          Nextflow work dir (-w); overrides the workDir in"
+  echo "                      nextflow.slurm.config so a dataset gets its own"
+  echo "                      task cache."
   exit 1
 }
 
@@ -88,6 +92,7 @@ while [[ $# -gt 0 ]]; do
     --samplesheet)       SAMPLESHEET_OVERRIDE="$2";    shift 2 ;;
     --custom-genome)     CUSTOM_GENOME="$2";           shift 2 ;;
     --gtf)               GTF="$2";                     shift 2 ;;
+    --work-dir)          WORK_DIR="$2";                shift 2 ;;
     --skip-great)        SKIP_GREAT=true;   shift ;;
     --skip-samplesheet)  SKIP_SAMPLESHEET=true; shift ;;
     -h|--help)           usage ;;
@@ -157,6 +162,7 @@ echo "  gtf              : ${GTF:-(none — resolved from iGenomes via --genome)
 echo "  chipseq_outdir   : $CHIPSEQ_OUTDIR"
 echo "  samplesheet_out  : $SAMPLESHEET"
 echo "  outdir           : $OUTDIR"
+echo "  work_dir         : ${WORK_DIR:-(from nextflow.slurm.config workDir)}"
 echo "  skip-samplesheet : $SKIP_SAMPLESHEET"
 echo "  timestamp        : $TS"
 
@@ -238,6 +244,7 @@ nextflow -log logs/nextflow/.nextflow.log \
   run khan-lab/enhancerflow -r "$ENHANCERFLOW_REV" \
   -profile apptainer \
   -c "$CONFIG" \
+  ${WORK_DIR:+-w "$WORK_DIR"} \
   -resume \
   --input          "$SAMPLESHEET" \
   --genome         "$GENOME" \
