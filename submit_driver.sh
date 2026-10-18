@@ -278,12 +278,16 @@ echo "  bwa_index   : ${BWA_INDEX_OVERRIDE:-from igenomes ($GENOME key)}"
 echo "  blacklist   : ${BLACKLIST_OVERRIDE:-from igenomes ($GENOME key; none for CHM13)}"
 echo "  work_dir    : ${WORK_DIR_OVERRIDE:-from $CONFIG (workDir)}"
 
-# --skip_spp: some GEO/legacy samples align at ~0% (bad chemistry/library, not a
-# pipeline bug) and leave phantompeakqualtools nothing to read, which crashes it
-# and (since its errorStrategy isn't 'retry'-eligible) aborts the whole run. Its
-# NSC/RSC/correlation output feeds MultiQC only -- not MACS3 or anything
-# downstream -- so skipping it is safe; those samples still yield ~0 peaks and
-# get dropped later by make_enhancerflow_samplesheet.py's --min-peaks check.
+# phantompeakqualtools (SPP) runs: it gives every sample its NSC, RSC and
+# fragment length, which dbSUPER stores in experiment.more_info.qc. It used to
+# be turned off here with --skip_spp (93b627f, for the GEO batch), because a
+# sample aligning at ~0% leaves SPP nothing to read and its crash aborted the
+# whole run; every run since then has null NSC/RSC. A failing SPP task is now
+# dropped for that sample alone -- see PHANTOMPEAKQUALTOOLS in
+# nfcore_chipseq.config. SPP feeds MultiQC only, never MACS3 or anything
+# downstream, so turning it on changes no peaks or super-enhancers; ~0%-aligned
+# samples still yield ~0 peaks and are dropped by make_enhancerflow_samplesheet.py's
+# --min-peaks check.
 nextflow -log logs/nextflow/.nextflow.log \
   run nf-core/chipseq -r 2.1.0 \
   -profile apptainer \
@@ -298,7 +302,6 @@ nextflow -log logs/nextflow/.nextflow.log \
   ${GTF_OVERRIDE:+--gtf "$GTF_OVERRIDE"} \
   ${BWA_INDEX_OVERRIDE:+--bwa_index "$BWA_INDEX_OVERRIDE"} \
   ${BLACKLIST_OVERRIDE:+--blacklist "$BLACKLIST_OVERRIDE"} \
-  --narrow_peak \
-  --skip_spp
+  --narrow_peak
 
 echo "[$(date)] driver exit status: $?"
